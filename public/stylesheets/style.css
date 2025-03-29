@@ -1,0 +1,116 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #222222;
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3f3f3f;
+  padding: 10px 20px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.highlight {
+  color: #4a90e2;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+}
+
+.search-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 40%;
+  padding: 8px;
+  border-radius: 20px;
+  border: none;
+  background-color: #222;
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-login {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.btn-register {
+  background-color: #27ae60;
+  color: white;
+}
+
+.banner {
+  text-align: center;
+  background-color: #4a90e2;
+  padding: 50px;
+  border-radius: 5px;
+}
+
+.featured-courses {
+  padding: 20px;
+}
+
+.courses-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  background-color: #3f3f3f;
+  padding-top: 40px;
+}
+
+.course-card img {
+  max-width:328px;
+  max-height:179px;
+  width: auto;
+  height: auto;
+}
+
+.footer {
+  background-color: #151515;
+  padding: 30px;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding-top: 30px;
+}
+
+.footer-bottom {
+  margin-top: 40px;
+}
+
+
