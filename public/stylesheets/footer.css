@@ -1,0 +1,22 @@
+.footer {
+    background-color: #151515;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .flex-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    align-items: flex-start;
+    gap: 30px;
+    
+  }
+  
+  .footer-bottom {
+    margin-top: 40px;
+  }
+
+  
