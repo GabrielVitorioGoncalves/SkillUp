@@ -3,7 +3,13 @@
     justify-content: space-between;
     align-items: center;
     background-color: #3f3f3f;
-    padding: 10px 20px;
+    padding: 10px 40px 10px 10px;
+  }
+
+  .section1{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
   }
   
   .logo {
@@ -16,9 +22,16 @@
   }
   
   .nav-links {
+    
     list-style: none;
     display: flex;
+    align-items: baseline;
     gap: 90px;
+  }
+
+  li{
+
+    height: 23.2px;
   }
   
   .nav-links a {
@@ -41,8 +54,9 @@
   }
   
   .buttons {
-    display: flex;
-    gap: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
   
   .btn {
