@@ -13,15 +13,13 @@
 </head>
 <body>
   <nav class="navbar">
-      <ul class="nav-links">
-        <li class="logo">Skill<span class="highlight">UP</span></li>
-        <li><a href="#">HOME</a></li>
-        <li><a href="#">SOBRE NÓS</a></li>
-      </ul>
-
+    <div class="logo">Skill<span class="highlight">UP</span></div>
+    <ul class="nav-links">
+      <li><a href="#">HOME</a></li>
+      <li><a href="#">SOBRE NÓS</a></li>
+    </ul>
     <div class="search-container">
     </div>
-
     <div class="buttons">
       <a href="login"><button  class="btn btn-login">Entrar</button></a>
       <button class="btn btn-register">Cadastrar-se</button>
@@ -30,7 +28,7 @@
   <main>
     <div class="login-box">
         <h2>Login</h2>
-        <form action="#" method="POST">
+        <form action="/admin/loginadmin" method="POST">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="senha" placeholder="Senha" required>
             <a href="#" class="forgot-password">Esqueceu sua senha?</a>
