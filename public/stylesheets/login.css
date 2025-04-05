@@ -7,10 +7,10 @@ main {
 }
 
 .login-box {
-    background-color: #2b2b2b;
+    background-color: #c14848;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(199, 6, 6, 0.2);
     width: 320px;
     text-align: center;
 }
