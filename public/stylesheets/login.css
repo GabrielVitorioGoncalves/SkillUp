@@ -4,6 +4,8 @@ main {
     justify-content: center;
     align-items: center;
     height: 80vh;
+    padding-bottom: 80px;
+    padding-top: 80px;
 }
 
 .login-box {
@@ -11,17 +13,18 @@ main {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    width: 320px;
+    width: 540px;
     text-align: center;
+    padding-bottom: 70px;
 }
 
 .login-box h2 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: white;
 }
 
 .login-box input {
-    width: 100%;
+    width: 454px;
     padding: 12px;
     margin: 10px 0;
     border: none;
@@ -40,7 +43,7 @@ main {
 .login-btn {
     background-color: blue;
     color: white;
-    width: 100%;
+    width: 474px;
     padding: 12px;
     border: none;
     border-radius: 5px;
