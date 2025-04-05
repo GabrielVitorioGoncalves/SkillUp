@@ -1,22 +1,88 @@
 .footer {
-    background-color: #151515;
-    padding: 30px;
-    text-align: center;
+  background-color: #151515;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.flex-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.footer-bottom {
+  margin-top: 20px;
+}
+
+.footer-sobre {
+  margin-left: 100px;
+}
+
+.footer-sobre,
+.footer-termos,
+.footer-redeSociais {
+  text-align: left;
+  padding: 0;
+}
+
+.svg-redeSociais {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  gap: 10px;
+}
+
+.footer-redeSociais svg {
+  width: 25px;
+  height: 25px;
+}
+
+hr {
+  width: 100%;
+  border: 1px solid #fff;
+  margin: 20px 0;
+}
+
+.footer-direitos {
+  display: grid;
+  grid-template-columns: 5% 95%;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .footer-sobre {
+    margin-left: 0px;
   }
-  
-  .flex-container {
+}
+
+@media (max-width: 584px) {
+  .footer-direitos {
     display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 30px;
-    
   }
-  
-  .footer-bottom {
-    margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+  .flex-container {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 60px;
   }
 
-  
+  .footer-termos {
+    text-align: left;
+    padding-left: 30%;
+  }
+
+  .footer-redeSociais {
+    text-align: left;
+    padding-left: 50%;
+  }
+
+  .footer-redeSociais svg {
+    width: 30px;
+    height: 30px;
+  }
+}
