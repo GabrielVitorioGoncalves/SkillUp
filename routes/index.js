@@ -9,4 +9,6 @@ router.get('/', function(req, res, next) {
 router.get('/login.ejs', function(req,res,next){
   res.render('login');
 });
+
+
 module.exports = router;
