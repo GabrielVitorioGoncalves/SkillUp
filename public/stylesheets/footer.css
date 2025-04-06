@@ -48,7 +48,7 @@ hr {
 .footer-direitos {
   display: grid;
   grid-template-columns: 5% 95%;
-  align-items: center;
+  align-items: baseline;
 }
 
 @media (max-width: 768px) {
