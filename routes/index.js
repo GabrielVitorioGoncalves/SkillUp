@@ -23,7 +23,9 @@ router.post('/login', async function(req,res,next){
 
     res.redirect('/pagUsu');
   }else{
+
     res.redirect('/login');
+    
   }
 });
 
