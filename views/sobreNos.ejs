@@ -7,6 +7,7 @@
   <link rel='stylesheet' href='../../stylesheets/style.css' />
   <link rel='stylesheet' href="../../stylesheets/footer.css">
   <link rel='stylesheet' href='../../stylesheets/nav.css'>
+  <link rel='stylesheet' href='../../stylesheets/sobreNos.css'>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
   <title>
@@ -18,7 +19,7 @@
   <nav class="navbar">
     <ul class="nav-links">
       <li class="logo">Skill<span class="highlight">UP</span></li>
-      <li><a href="#">HOME</a></li>
+      <li><a href="/">HOME</a></li>
       <li><a href="sobreNos">SOBRE NÓS</a></li>
     </ul>
 
@@ -27,33 +28,99 @@
   </div>
 
   <div class="buttons">
-    <a href="login"><button  class="btn btn-login">Entrar</button></a>
+    <a href="login"><button class="btn btn-login">Entrar</button></a>
     <a href=""><button class="btn btn-register">Cadastrar-se</button></a>
   </div>
 </nav>
 
-<main class="quem-somos">
-    <h1 class="titulo-quem-somos">Quem somos?</h1>
-    <div class="cards-container">
-      <div class="card">
-        <div class="foto">Foto</div>
-        <p class="descricao">Mucho texto</p>
-        <h3 class="nome">Lucas Leal</h3>
+  <header class="banner sobre-banner">
+    <h1>Sobre Nós</h1>
+    <p>Conheça a equipe por trás da SkillUP</p>
+  </header>
+
+  <section class="sobre-section">
+    <div class="sobre-container">
+      <div class="sobre-content">
+        <h2>Nossa Missão</h2>
+        <p>Na SkillUP, nossa missão é democratizar o conhecimento e proporcionar educação de qualidade para todos. Acreditamos que o aprendizado contínuo é a chave para o desenvolvimento pessoal e profissional.</p>
+        
+        <blockquote>
+          "Nossa missão é entregar excelência e inovação em cada curso, superando as expectativas dos nossos alunos e transformando vidas através da educação."
+        </blockquote>
+        
+        <p>Trabalhamos com dedicação e compromisso para garantir a satisfação total dos nossos usuários, oferecendo cursos personalizados e de alta qualidade em diversas áreas do conhecimento.</p>
       </div>
-      <div class="card">
-        <div class="foto">Foto</div>
-        <p class="descricao">Mucho texto</p>
-        <h3 class="nome">Gabriel Vitório</h3>
-      </div>
-      <div class="card">
-        <div class="foto">Foto</div>
-        <p class="descricao">Mucho texto</p>
-        <h3 class="nome">Guilhermer Halter</h3>
+      <div class="sobre-image">
+        <img src="../public/images/design.png" alt="Equipe SkillUP">
       </div>
     </div>
-  </main>  
+  </section>
 
-<footer class="footer">
+  <section class="team-section">
+    <h2>Nossa Equipe</h2>
+    <div class="team-container">
+      <div class="team-card">
+        <div class="team-image">
+          <img src="../../images/lucas.jpg" alt="Lucas Leal">
+        </div>
+        <div class="team-info">
+          <h3>Lucas Leal</h3>
+          <p class="team-role">Diretor Executivo</p>
+          <p class="team-bio">Com vasta experiência no mercado educacional, Lucas lidera nossa equipe com visão estratégica e foco em resultados. Sua paixão por educação transformadora é o que impulsiona a SkillUP.</p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-image">
+          <img src="../../images/gabriel.jpg" alt="Gabriel Vitório">
+        </div>
+        <div class="team-info">
+          <h3>Gabriel Vitório</h3>
+          <p class="team-role">Diretor de Tecnologia</p>
+          <p class="team-bio">Especialista em soluções tecnológicas inovadoras, Gabriel garante que nossa plataforma esteja sempre à frente no mercado, oferecendo a melhor experiência de aprendizado online.</p>
+        </div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-image">
+          <img src="../../images/guilherme.jpg" alt="Guilherme Halter">
+        </div>
+        <div class="team-info">
+          <h3>Guilherme Halter</h3>
+          <p class="team-role">Diretor de Conteúdo</p>
+          <p class="team-bio">Com um olhar único para qualidade educacional, Guilherme coordena nossa equipe de professores e especialistas, garantindo conteúdos atualizados e metodologias eficientes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="valores-section">
+    <h2>Nossos Valores</h2>
+    <div class="valores-container">
+      <div class="valor-card">
+        <i class="bi bi-lightbulb"></i>
+        <h3>Inovação</h3>
+        <p>Buscamos constantemente novas formas de ensinar e aprender, incorporando tecnologias e metodologias inovadoras.</p>
+      </div>
+      <div class="valor-card">
+        <i class="bi bi-trophy"></i>
+        <h3>Excelência</h3>
+        <p>Comprometemo-nos com a qualidade em cada detalhe, desde o conteúdo dos cursos até o suporte aos alunos.</p>
+      </div>
+      <div class="valor-card">
+        <i class="bi bi-people"></i>
+        <h3>Comunidade</h3>
+        <p>Acreditamos no poder da colaboração e da construção de uma comunidade forte de aprendizado.</p>
+      </div>
+      <div class="valor-card">
+        <i class="bi bi-globe"></i>
+        <h3>Acessibilidade</h3>
+        <p>Trabalhamos para tornar o conhecimento acessível a todos, independentemente de sua localização ou condição.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
     <div class="flex-container">
       <div class="footer-sobre">
         <h4>SOBRE</h4>
@@ -82,8 +149,6 @@
               <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
             </svg>
         </div>
-       
-       
       </div>
     </div>
     <hr>
@@ -92,7 +157,6 @@
         <span class="logo">Skill<span class="highlight">UP</span></span>
         <p class="footer-bottom">&copy; 2025 SkillUP - Todos os direitos reservados</p>
     </div>
-
   </footer>
 </body>
 
