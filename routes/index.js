@@ -37,6 +37,9 @@ router.get('/pagUsu', async function(req,res,next){
 
 });
 
+router.get('/sobreNos', async function(res,res,next){
+  res.render('sobreNos', { title: 'Sobre Nos' });
+});
 
 
 function verificarLogin(res) {
