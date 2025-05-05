@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req,res,next){
   res.render('login');
 });
-
+//Ja foi testada
 router.post('/login', async function(req,res,next){
   const email = req.body.email;
   const senha = req.body.senha;
@@ -29,9 +29,11 @@ router.post('/login', async function(req,res,next){
   }
 });
 
-router.get('/pagUsu', async function(res,res,next){
+//Testar
+
+router.get('/pagUsu', async function(req,res,next){
   verificarLogin(res);
-  res.render('pagUsu');
+  res.render('Usuario');
 
 });
 
@@ -44,6 +46,6 @@ function verificarLogin(res) {
   }
 
 }
-
+//Testar verifiar Login
 
 module.exports = router;

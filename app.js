@@ -4,8 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var adminRouter = require('./routes/admin');
+var indexRouter = require('../SkillUp/routes/index');
+var adminRouter = require('../SkillUp/routes/admin');
 
 var app = express();
 
