@@ -43,9 +43,10 @@ router.get('/sobreNos', async function(res,res,next){
 
 
 function verificarLogin(res) {
-  console.log("entrou em verificarLogin");
+  const test = false;
   if (!global.usu_email || global.usu_email == "") {
     res.redirect('/login');
+    return test=true;
   }
 
 }
