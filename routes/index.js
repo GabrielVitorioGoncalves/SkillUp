@@ -43,12 +43,13 @@ router.get('/sobreNos', async function(res,res,next){
 
 
 function verificarLogin(res) {
-  console.log("entrou em verificarLogin");
   if (!global.usu_email || global.usu_email == "") {
     res.redirect('/login');
   }
 
 }
+
+
 //Testar verifiar Login
 
-module.exports = router;
+module.exports = {router,verificarLogin};
