@@ -43,13 +43,15 @@ router.get('/sobreNos', async function(res,res,next){
 
 
 function verificarLogin(res) {
-  const test = false;
+  var test = false;
   if (!global.usu_email || global.usu_email == "") {
     res.redirect('/login');
     return test=true;
   }
 
 }
+
+
 //Testar verifiar Login
 
-module.exports = router;
+module.exports = {router,verificarLogin};

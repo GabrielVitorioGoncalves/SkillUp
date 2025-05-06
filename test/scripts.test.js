@@ -1,6 +1,7 @@
+const { default: test } = require('node:test');
 const banco = require('../banco');
 
-describe('Rota - /login', () => {
+describe('função - buscarUsuario e buscary', () => {
     test('Usuario existe', async () => {
         const usu = { email: 'teste@teste', senha: 'teste' };
         const resultado = await banco.buscarUsuario(usu);
@@ -14,5 +15,7 @@ describe('Rota - /login', () => {
 
         expect(resultado).toEqual({});
     });
+
+    test
 
 });
