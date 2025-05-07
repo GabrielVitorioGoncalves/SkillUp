@@ -37,7 +37,7 @@ router.get('/pagUsu', async function(req,res,next){
 
 });
 
-router.get('/sobreNos', async function(res,res,next){
+router.get('/sobreNos', async function(req,res,next){
   res.render('sobreNos', { title: 'Sobre Nos' });
 });
 
@@ -46,6 +46,7 @@ function verificarLogin(res) {
   var test = false;
   if (!global.usu_email || global.usu_email == "") {
     res.redirect('/login');
+    
     return test=true;
   }
 

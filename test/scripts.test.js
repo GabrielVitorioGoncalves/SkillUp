@@ -1,7 +1,6 @@
-const { default: test } = require('node:test');
 const banco = require('../banco');
 
-describe('função - buscarUsuario e buscary', () => {
+describe('função - buscarUsuario e buscar', () => {
     test('Usuario existe', async () => {
         const usu = { email: 'teste@teste', senha: 'teste' };
         const resultado = await banco.buscarUsuario(usu);
