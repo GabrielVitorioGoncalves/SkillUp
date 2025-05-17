@@ -55,4 +55,4 @@ function verificarLogin(res) {
 
 //Testar verifiar Login
 
-module.exports = {router,verificarLogin};
+module.exports = router;  // Retirada a exportação da função verificarLogin
