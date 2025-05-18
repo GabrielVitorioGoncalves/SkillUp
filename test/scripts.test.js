@@ -1,6 +1,6 @@
 const banco = require('../banco');
 
-describe('função - buscarUsuario e buscar', () => {
+describe('Teste - Cadastro com email e senha', () => {
     test('Usuario existe', async () => {
         const usu = { email: 'teste@teste', senha: 'teste' };
         const resultado = await banco.buscarUsuario(usu);
@@ -14,7 +14,4 @@ describe('função - buscarUsuario e buscar', () => {
 
         expect(resultado).toEqual({});
     });
-
-    test
-
 });
