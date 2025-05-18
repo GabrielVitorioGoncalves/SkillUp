@@ -15,11 +15,12 @@ router.post('/login', async function(req,res,next){
   const email = req.body.email;
   const senha = req.body.senha;
 
-  const usuario = await global.banco.buscarUsuario({ email, senha});
+  const usuario = await global.banco.buscarUsuario({email, senha});
 
   if(usuario.id_usuario){
     global.id_usuario = usuario.id_usuario;
     global.usu_email = usuario.usu_email;
+    global.usu_nome = usuario.usu_nome;
 
     res.redirect('/pagUsu');
   }else{
@@ -31,10 +32,14 @@ router.post('/login', async function(req,res,next){
 
 //Testar
 
-router.get('/pagUsu', async function(req,res,next){
-  verificarLogin(res);
-  res.render('Usuario');
+router.get('/pagUsu', async function(req, res, next) {
+  if (!global.usu_email || global.usu_email === "") {
+    return res.redirect('/login');
+  }
 
+  const userName = global.usu_nome;
+
+  res.render('Usuario', { userName });
 });
 
 router.get('/sobreNos', async function(req,res,next){
