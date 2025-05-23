@@ -10,6 +10,10 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req,res,next){
   res.render('login');
 });
+
+router.get('/CadastroUsuario', function(req,res,next){
+  res.render('CadastroUsuario');
+})
 //Ja foi testada
 router.post('/login', async function(req,res,next){
   const email = req.body.email;
@@ -29,6 +33,20 @@ router.post('/login', async function(req,res,next){
     
   }
 });
+
+router.post('/CadastroUsuario',async function(req,res,next){
+  const usu = req.body.usuario;
+  const email = req.body.email;
+  const senha = req.body.senha;
+  const confirmar_senha = req.body.confirmar_senha
+
+  const variavel =  await global.banco.cadastarUsuario({usu,email,senha,confirmar_senha})
+
+  if(variavel.senha == variavel.confirmar_senha){
+    p
+  }
+
+})
 
 //Testar
 

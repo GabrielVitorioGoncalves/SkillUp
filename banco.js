@@ -55,6 +55,7 @@ async function buscarAdmin(admin){
   }
 };
 
+
 conectarBD();
 
 module.exports = {buscarUsuario, buscarAdmin}

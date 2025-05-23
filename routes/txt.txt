@@ -1,0 +1,5 @@
+Criar função de recomendação 
+testar ela
+verificar login
+CRUID de categorias
+testar ele 
