@@ -16,7 +16,8 @@ async function conectarBD(){
         port : 3306,
         user : 'root',
         password : '',
-        database : 'skillUp'
+        database : 'skillUp',
+        charset: 'utf8mb4'
     }
   );
 
@@ -83,7 +84,37 @@ async function buscarAdmin(admin){
   }
 };
 
+async function (params) {
+  
+}
+/**
+ * Funções para usar futuramente
+ */
+
+async function buscarNotasPorCurso(id_video) {
+  const conex = await conectarBD();
+  const [notas] = await conex.execute(
+    "Select ava_nota  from avaliacao where id_video=?",
+    [id_video]
+  );
+
+  return notas;
+  
+}
+
+function calcularMediaDoCurso(avaliacoes) {
+  if (!avaliacoes || avaliacoes.length === 0) {
+    return null;
+  }
+
+  const soma = avaliacoes.reduce((total, nota) => total + nota, 0);
+  const media = soma / avaliacoes.length;
+
+  return parseFloat(media.toFixed(1)); // para garantir que seja 4.2, e não 4.199999...
+}
+
+
 
 conectarBD();
 
-module.exports = {buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario}
+module.exports = {buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso}
