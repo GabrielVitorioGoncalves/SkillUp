@@ -41,6 +41,34 @@ async function buscarUsuario(usuario) {
   }
 }
 
+async function verificarUsuarioExistente(usuario,email) 
+{
+  const conex = await conectarBD();
+
+  const sql = "select * from usuarios where usu_nome=? or usu_email=?;"
+
+  const[usuarios] = await conex.query(sql,[usuario, email]);
+
+  //retorna true caso "usuarios" tenha algum registro
+  //ou False caso não tenha qualquer registro
+  return Array.isArray(usuarios) && usuarios.length > 0;
+}
+
+async function cadastrarUsuario(usuario,email,senha)
+{
+  const conex = await conectarBD();
+  // const hashSenha = await bcrypt.hash(senha,10);
+  const sql =  "insert into usuarios(usu_nome, usu_email, usu_senha) values(?,?,?);";
+
+  await conex.query(sql,[usuario,email,senha])
+}
+
+
+/**
+ * 
+ * Rotas para o Admin
+ */
+
 async function buscarAdmin(admin){
   const conex = await conectarBD();
 
@@ -58,4 +86,4 @@ async function buscarAdmin(admin){
 
 conectarBD();
 
-module.exports = {buscarUsuario, buscarAdmin}
+module.exports = {buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario}
