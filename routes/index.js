@@ -19,11 +19,11 @@ router.get('/CadastroUsuario', function (req, res, next) {
 router.post('/CadastroUsuario', async function (req, res, next) {
 
   const { usuario, email, senha } = req.body
-    const jaExiste = await global.banco.verificarUsuarioExistente(usuario, email);
+  const jaExiste = await global.banco.verificarUsuarioExistente(usuario, email);
     if(jaExiste){
-      return res.status(404).render('error', {
-      message: 'Usuário já Existe',
-      error: { status: 404}
+      return res.status(404).render('CadastroUsuario', {
+      mensagem: 'Usuário já Existe',
+      sucesso: false
     });
     }
     await global.banco.cadastrarUsuario(usuario, email, senha);
