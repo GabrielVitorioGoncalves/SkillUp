@@ -68,6 +68,8 @@ router.get('/sobreNos', async function (req, res, next) {
 });
 
 
+
+
 function verificarLogin(res) {
   var test = false;
   if (!global.usu_email || global.usu_email == "") {

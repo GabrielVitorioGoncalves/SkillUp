@@ -84,9 +84,6 @@ async function buscarAdmin(admin){
   }
 };
 
-async function (params) {
-  
-}
 /**
  * Funções para usar futuramente
  */
@@ -117,4 +114,4 @@ function calcularMediaDoCurso(avaliacoes) {
 
 conectarBD();
 
-module.exports = {buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso}
+module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso}
