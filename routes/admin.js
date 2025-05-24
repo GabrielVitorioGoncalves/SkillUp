@@ -57,7 +57,8 @@ function verificarLogin(res) {
 // post para criação de curso 
 router.post('/cria-curso', upload.single('capa'), async function(req, res) {
   const { nome, descricao, categoria } = req.body;
-  const capa = req.file ? req.file.path : null;
+  const capa = req.file ? '/uploads/capas/' + req.file.filename : null;
+
 
   const conexao = await global.banco.conectarBD();
   try {
