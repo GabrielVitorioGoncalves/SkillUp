@@ -54,18 +54,18 @@ function verificarLogin(res) {
   }
 }
 
-router.get('/CadastrarAdm', async function (req,res,next) {
+router.get('/cadastroAdm', async function (req,res,next) {
   verificarLogin(res);
-  res.render('admin/CadastrarAdm');
+  res.render('admin/cadastroAdm');
   
 })
 
-router.post('/CadastrarAdm', async function(req,res,next){
+router.post('/cadastroAdm', async function(req,res,next){
 
 const {usuario,email,senha} = req.body
 const verificarAdm = await global.banco.verificarAdmExistente(usuario,email);
 if(verificarAdm){
-  return res.render('CadastroUsuario')
+  return res.render('CadastroAdm')
 };
 
 const admin = await global.banco.cadastrarUsuario(usuario,email,senha);
@@ -73,19 +73,6 @@ res.redirect('/principalAdm')
 
 })
 
-router.post('/CadastroUsuario', async function (req, res, next) {
-
-  const { usuario, email, senha } = req.body
-  const jaExiste = await global.banco.verificarUsuarioExistente(usuario, email);
-    if(jaExiste){
-      return res.status(404).render('CadastroUsuario', {
-      mensagem: 'Usuário já Existe',
-      sucesso: false
-    });
-    }
-    await global.banco.cadastrarAdmin(usuario, email, senha);
-    res.redirect('/');
-})
 
 
 
