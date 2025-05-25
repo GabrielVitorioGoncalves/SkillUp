@@ -54,6 +54,12 @@ function verificarLogin(res) {
   }
 }
 
+router.get('/CadastrarAdm', async function (req,res,next) {
+  verificarLogin(res);
+  res.render('admin/CadastrarAdm');
+  
+})
+
 router.post('/CadastrarAdm', async function(req,res,next){
 
 const {usuario,email,senha} = req.body
