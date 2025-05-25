@@ -10,7 +10,6 @@ body {
   height: 100vh;
 }
 
-/* --- Sidebar --- */
 .sidebar {
   width: 180px;
   background: #1e1e1e;
@@ -41,15 +40,15 @@ body {
   color: #fff;
 }
 
-/* --- Main Content --- */
+
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: column;    /* título e form em coluna */
-  justify-content: center;   /* centraliza verticalmente */
-  align-items: center;       /* centraliza horizontalmente */
+  flex-direction: column;    
+  justify-content: center; 
+  align-items: center;     
   padding: 40px;
-  text-align: center;        /* centraliza texto do título */
+  text-align: center;        
 }
 
 h2 {

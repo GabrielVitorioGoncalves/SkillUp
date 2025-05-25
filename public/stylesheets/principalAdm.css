@@ -48,13 +48,11 @@ body {
   color: #fff;
 }
 
-/* --- Conteúdo principal --- */
 .main-content {
   flex: 1;
   padding: 20px;
 }
 
-/* --- Cartões de estatísticas --- */
 .stats {
   display: flex;
   gap: 20px;
