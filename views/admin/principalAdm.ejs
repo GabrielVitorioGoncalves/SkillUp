@@ -34,33 +34,49 @@
         </div>
       </section>
 
-      <section class="course-section">
-        <div class="course-header">
-          <input type="text" placeholder="🔍 Pesquisar curso" />
-        </div>
+<section class="course-section">
+  <div class="course-layout">
+    <div class="course-scrollable">
 
-        <div class="course-grid">
-          <!-- Repita este bloco para cada curso -->
-          <div class="course-card">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JS">
-            <h5>JAVASCRIPT</h5>
-            <p>NOME DO CURSO COMPLETO</p>
-            <span>Nome do professor</span>
-          </div>
-          <div class="course-card">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JS">
-            <h5>JAVASCRIPT</h5>
-            <p>NOME DO CURSO COMPLETO</p>
-            <span>Nome do professor</span>
-        </div>
+        <!-- Repita este bloco para cada curso -->
+<div class="course-grid" id="courseGrid"></div>
+
+<script>
+  const cursos = [
+    { titulo: 'JavaScript', descricao: 'NOME DO CURSO COMPLETO', professor: 'Nome do professor', img: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png' },
+    { titulo: 'Python', descricao: 'Curso de Python', professor: 'Prof. Python', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg' }
+  ];
+
+  const courseGrid = document.getElementById('courseGrid');
+  for(let i=0; i<10; i++) {
+    cursos.forEach(curso => {
+      const card = document.createElement('div');
+      card.classList.add('course-card');
+      card.innerHTML = `
+        <img src="${curso.img}" alt="${curso.titulo}">
+        <h5>${curso.titulo.toUpperCase()}</h5>
+        <p>${curso.descricao}</p>
+        <span>${curso.professor}</span>
+      `;
+      courseGrid.appendChild(card);
+    });
+  }
+</script>
+
+
+
         
+        <!-- Outros cards aqui -->
+    </div>
 
+    <div class="course-sidebar">
+      <input type="text" class="search-box" placeholder="🔍 Pesquise o curso" />
+      <button class="add">Adicionar Curso</button>
+      <button class="edit">Editar Curso</button>
+    </div>
+  </div>
+</section>
 
-        <div class="course-actions">
-          <button class="add">Adicionar Curso</button>
-          <button class="edit">Editar Curso</button>
-        </div>
-      </section>
     </main>
   </div>
 

@@ -18,6 +18,7 @@ body {
   flex: 1;
 }
 
+/* --- Sidebar --- */
 .sidebar {
   width: 180px;
   background: #1e1e1e;
@@ -47,11 +48,13 @@ body {
   color: #fff;
 }
 
+/* --- Conteúdo principal --- */
 .main-content {
   flex: 1;
   padding: 20px;
 }
 
+/* --- Cartões de estatísticas --- */
 .stats {
   display: flex;
   gap: 20px;
@@ -83,74 +86,100 @@ body {
   font-weight: bold;
 }
 
+/* --- Seção de Cursos --- */
 .course-section {
   background: #1a1a1a;
   padding: 20px;
   border-radius: 12px;
 }
 
-.course-header {
+.course-layout {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-.course-header input {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  width: 250px;
+  justify-content: space-between;
+  gap: 20px;
 }
 
+/* Área com scroll */
+.course-scrollable {
+  flex: 1;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Cards menores */
 .course-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 15px;
 }
 
 .course-card {
   background: #2c2c2c;
-  padding: 15px;
+  padding: 10px;
   border-radius: 10px;
   text-align: center;
 }
 .course-card img {
   width: 100%;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
 .course-card h5 {
   color: #fff;
-  margin-bottom: 5px;
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 .course-card p {
   color: #ddd;
+  font-size: 12px;
   font-weight: bold;
 }
 .course-card span {
-  font-size: 12px;
+  font-size: 10px;
   color: #aaa;
 }
 
-.course-actions {
-  margin-top: 30px;
+/* Lado direito fixo */
+.course-sidebar {
+  width: 240px;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
 }
 
-.course-actions .add,
-.course-actions .edit {
-  padding: 12px 18px;
-  border: none;
+.course-sidebar .search-box {
+  padding: 10px;
   border-radius: 8px;
-  color: white;
+  border: none;
+  margin-bottom: 100%;
+  width: 100%;
+}
+
+.course-sidebar .add,
+.course-sidebar .edit {
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
   font-weight: bold;
+  color: white;
   cursor: pointer;
 }
 
-.course-actions .add {
+.course-sidebar .add {
   background-color: #2d79ff;
 }
 
-.course-actions .edit {
+.course-sidebar .edit {
   background-color: #356aff;
+}
+
+/* Scroll personalizado opcional */
+.course-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+.course-scrollable::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 6px;
 }
