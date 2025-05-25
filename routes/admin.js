@@ -21,12 +21,12 @@ const upload = multer({ storage: armazena });
 
 // Rotas principais do Admin 
 router.get('/', function (req, res, next) {
-  res.render('admin');
+  res.render('admin/admin');
 });
 
-router.get('/dashboard', async function (req, res, next) {
+router.get('/principalAdm', async function (req, res, next) {
   verificarLogin(res);
-  res.render('dashboard');
+  res.render('admin/principalAdm');
 });
 
 router.get('/Temas', async function (req, res, next) {
@@ -42,7 +42,7 @@ router.post('/loginadmin', async function (req, res, next) {
   if (admin.id_admin) {
     global.id_admin = admin.id_admin;
     global.adm_email = admin.adm_email;
-    res.redirect('/admin/dashboard');
+    res.redirect('/admin/principalAdm');
   } else {
     res.redirect('/admin');
   }
@@ -53,6 +53,33 @@ function verificarLogin(res) {
     res.redirect('/admin');
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // post para criação de curso 
 router.post('/cria-curso', upload.single('capa'), async function(req, res) {
