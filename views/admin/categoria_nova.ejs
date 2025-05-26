@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Nova Categoria</title>
+  <link rel="stylesheet" href="../stylesheets/categoriaNova.css">
+  <link rel="stylesheet" href="../stylesheets/footer.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Skill <span>UP</span></h2>
+      <nav>
+        <a href="temas">🏠 Dashboard</a>
+        <a href="principalAdm">📚 Cursos</a>
+        <a href = "cadastroAdm.ejs">Administrador</a>
+        <a href="categorias" class="active">🗂️ Categorias</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Nova Categoria</h1>
+
+      <% if (mensagem) { %>
+        <div class="<%= sucesso ? 'mensagem-sucesso' : 'mensagem-erro' %>">
+          <%= mensagem %>
+        </div>
+      <% } %>
+
+      <form action="/admin/categorianova" method="POST" class="form-categoria">
+        <label for="cat_nome">Nome da Categoria</label>
+        <input type="text" id="cat_nome" name="cat_nome" placeholder="Digite o nome da categoria" value="<%= cat_nome ? cat_nome : '' %>" required>
+
+        <button type="submit">Cadastrar Categoria</button>
+      </form>
+    </main>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

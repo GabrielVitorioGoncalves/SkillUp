@@ -58,6 +58,42 @@ router.get('/categorianova', async function (req,res,next){
 
 //Post para a pegar o formulario da categoria nova
 
+router.post('/categorianova', async function (req,res,next) {
+  verificarLogin(res);
+
+  const cat_nome = req.body.cat_nome
+
+  //Verificação se o nome esta em branco
+  if(!cat_nome){
+    return res.render('admin/categoria_nova',{
+      cat_nome : global.cat_nome,
+      mensagem : 'O campo deve ser preenchido',
+      sucesso: false
+    })
+  }
+
+  // Outra verificação para saber se o nome
+  // está duplicado
+
+  const categoriaExistente = await global.banco.admBuscarCategoria(cat_nome);
+  if(categoriaExistente){
+    return res.render('admin/categoria_nova',{
+      cat_nome : global.cat_nome,
+      mensagem : 'Essa categoria já Existe no banco de Dados',
+      sucesso : false
+    });
+  }
+
+  //Agora caso o nome nao esteja em branco nem exista algum nome igual no devemos inserir o dado no banco
+
+  await global.banco.admInserirCategoria(cat_nome);
+  return res.render('admin/categoria_nova',{
+    cat_nome : global.cat_nome,
+    mensagem : 'Categoria criada com sucesso.',
+    sucesso : true
+  });
+})
+
 
 
 
