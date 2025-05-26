@@ -58,6 +58,20 @@ async function buscarAdmin(admin){
     }
 };
 
+async function verificarAdmExistente(usuario,email){
+    const conex = await conectarBD();
+    const sql = "select * from admin where adm_email=? and adm_senha=?;"
+    const[adm] = await conex.query(sql,[usuario,email]);
+    return Array.isArray(adm) && adm.length > 0;
+
+}
+
+async function cadastrarAdmin(usuario, email, senha){
+    const conex = await conectarBD();
+    const sql = "insert into admin(adm_nome,adm_email,adm_senha) values (?,?,?);"
+    await conex.query(sql,[usuario,email,senha]);
+}
+
 /**
  * Funções para usar futuramente
  */
@@ -80,4 +94,4 @@ function calcularMediaDoCurso(avaliacoes) {
     return parseFloat(media.toFixed(1)); 
 }
 
-module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso}
+module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso, verificarAdmExistente, cadastrarAdmin}
