@@ -21,12 +21,12 @@ const upload = multer({ storage: armazena });
 
 // Rotas principais do Admin 
 router.get('/', function (req, res, next) {
-  res.render('admin/admin');
+  res.render('admin');
 });
 
-router.get('/principalAdm', async function (req, res, next) {
+router.get('/dashboard', async function (req, res, next) {
   verificarLogin(res);
-  res.render('admin/principalAdm');
+  res.render('dashboard');
 });
 
 router.get('/Temas', async function (req, res, next) {
@@ -42,7 +42,7 @@ router.post('/loginadmin', async function (req, res, next) {
   if (admin.id_admin) {
     global.id_admin = admin.id_admin;
     global.adm_email = admin.adm_email;
-    res.redirect('/admin/principalAdm');
+    res.redirect('/admin/dashboard');
   } else {
     res.redirect('/admin');
   }
@@ -53,53 +53,6 @@ function verificarLogin(res) {
     res.redirect('/admin');
   }
 }
-
-router.get('/cadastroAdm', async function (req,res,next) {
-  verificarLogin(res);
-  res.render('admin/cadastroAdm');
-  
-})
-
-router.post('/cadastroAdm', async function(req,res,next){
-
-const {usuario,email,senha} = req.body
-const verificarAdm = await global.banco.verificarAdmExistente(usuario,email);
-if(verificarAdm){
-  return res.render('admin/cadastroAdm')
-};
-
-const admin = await global.banco.cadastrarAdmin(usuario,email,senha);
-res.redirect('/principalAdm')
-
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // post para criação de curso 
 router.post('/cria-curso', upload.single('capa'), async function(req, res) {
