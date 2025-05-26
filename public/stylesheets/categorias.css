@@ -1,0 +1,122 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1f1f1f;
+  color: white;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #2a2a2a;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  color: white;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+.sidebar h2 span {
+  color: #00aaff;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: background 0.3s;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background-color: #00aaff;
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-nova {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-nova:hover {
+  background-color: #0065d1;
+}
+
+.card {
+  background-color: #2e2e2e;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.search-box {
+  margin: 20px 0;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #444;
+  color: white;
+  font-size: 15px;
+}
+
+table.categoria-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  margin-top: 10px;
+}
+
+.categoria-tabela th,
+.categoria-tabela td {
+  padding: 12px;
+  border-bottom: 1px solid #444;
+  text-align: left;
+}
+
+.categoria-tabela td button.action-btn {
+  background: #444;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  margin-right: 6px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.categoria-tabela td button.action-btn:hover {
+  background: #666;
+}

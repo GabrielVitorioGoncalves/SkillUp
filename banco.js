@@ -93,5 +93,43 @@ function calcularMediaDoCurso(avaliacoes) {
     const media = soma / avaliacoes.length;
     return parseFloat(media.toFixed(1)); 
 }
+async function admExcluirCategoria(codigo) {
+    const conex =  await conectarBD();
+    const sql = "delete from temas where id_tema=?";
+    await conex.query(sql,[codigo]) 
+}
 
-module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso, verificarAdmExistente, cadastrarAdmin}
+async function admAtualizarCategoria(nome,codigo) {
+    const conex = await conectarBD();
+    const sql = "update temas set cat_nome=? where id_tema=?";
+    await conex.query(sql,[nome,codigo]);
+}
+async function admBuscarCategoriaPorCodigo(codigo) { 
+    const conex = await conectarBD();
+    const sql =  "select * from temas where id_tema=?";
+    const [categorias] = await conex.query(sql,[codigo]);
+    return categorias[0] || null; 
+}
+async function admInserirCategoria(nome) {
+    const conex = await conectarBD();
+    const sql = "insert into temas (cat_nome) values (?);";
+    await conex.query(sql,[nome])
+}
+
+async function admBuscarCategorias() {
+    const conex = await conectarBD();
+    const sql = "Select * from temas order by cat_nome;";
+    const [cate] = await conex.query(sql);
+    return cate;
+}
+
+async function admBuscarCategoria(nome) {
+    const conex = await conectarBD();
+    const sql = "Select * from temas where cat_nome=? order by cat_nome;";
+    const [categoria] = await conex.query(sql,[nome]);
+    return categoria.length > 0;
+}
+
+
+
+module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso, verificarAdmExistente, cadastrarAdmin, admExcluirCategoria, admAtualizarCategoria,admBuscarCategoriaPorCodigo,admInserirCategoria,admBuscarCategoria, admBuscarCategorias}

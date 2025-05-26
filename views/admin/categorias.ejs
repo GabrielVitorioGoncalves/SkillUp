@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciar Categorias</title>
+  <link rel="stylesheet" href="../stylesheets/categorias.css">
+  <link rel="stylesheet" href="../stylesheets/footer.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Skill <span>UP</span></h2>
+      <nav>
+        <a href="temas">🏠 Dashboard</a>
+        <a href="principalAdm">📚 Cursos</a>
+        <a href="categorias" class="active">🗂️ Categorias</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="header">
+        <h1>Gerenciar Categorias</h1>
+        <button class="btn-nova">+ Nova Categoria</button>
+      </div>
+
+      <div class="card">
+        <h2>Categorias</h2>
+        <p>Lista de todas as categorias cadastradas no sistema</p>
+
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Busque Categorias">
+        </div>
+
+        <table class="categoria-tabela">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% cate.forEach (cate => {%>
+            <tr>
+              <td>1</td>
+              <td><%= cat.cat_nome %></td>
+              <td><%= cate.cat_nome %></td>
+              <td>
+                <a href="/admin/atualizarcategoria/<%=cate.id_tema %>"><button class="action-btn">Atualizar</button></a>
+                <a href="/admin/excluircategoria/<%= cate.id_tema %>"><button class="action-btn">Excluir</button></a>
+              </td>
+            </tr>
+           <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <%- include('../partials/footer') %>
+</body>
+</html>

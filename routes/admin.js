@@ -29,6 +29,37 @@ router.get('/principalAdm', async function (req, res, next) {
   res.render('admin/principalAdm');
 });
 
+
+/**
+ * Rotas para as categorias
+ */
+
+router.get('/categorias', async function (req,res,next) {
+  verificarLogin(res);
+  res.render('admin/categorias');
+
+  const cate = await global.banco.admBuscarCategorias();
+
+  res.render('admin/categorias',{
+    admNome: global.admNome,
+    cate,
+    mensagem: null,
+    sucesso: false
+  });
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get('/Temas', async function (req, res, next) {
   res.render('temas', { title: 'Temas' });
 });
