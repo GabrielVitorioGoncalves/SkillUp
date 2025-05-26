@@ -36,17 +36,27 @@ router.get('/principalAdm', async function (req, res, next) {
 
 router.get('/categorias', async function (req,res,next) {
   verificarLogin(res);
-  res.render('admin/categorias');
-
   const cate = await global.banco.admBuscarCategorias();
 
   res.render('admin/categorias',{
-    admNome: global.admNome,
+    cat_nome: global.cat_nome,
     cate,
     mensagem: null,
     sucesso: false
   });
 })
+
+router.get('/categorianova', async function (req,res,next){
+  verificarLogin(res);
+  res.render('admin/categoria_nova',{
+    cat_nome: global.cat_nome,
+    mensagem: null,
+    sucesso: false
+  })
+})
+
+
+//Post para a pegar o formulario da categoria nova
 
 
 
