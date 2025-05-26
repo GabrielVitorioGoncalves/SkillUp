@@ -9,15 +9,14 @@
 <body>
   <div class="container">
     <aside class="sidebar">
-      <h2>Skill <span>UP</span></h2>
-      <nav>
+      <h2 class="logo">Skill <span>UP</span></h2>
+      <nav class="nav-menu">
         <a href="temas">🏠 Dashboard</a>
-        <a href="principalAdm" >📚 Cursos</a>
-        <a href="cadastroAdm" class="active">Administrador</a>
+        <a href="principalAdm">📚 Cursos</a>
+        <a href="cadastroAdm" class="active">🧑‍💼 Administrador</a>
       </nav>
     </aside>
-    </aside>
-    
+
     <main class="main-content">
       <h2>Cadastrar Administrador</h2>
       <form action="/admin/cadastroAdm" method="POST" class="form-admin">
@@ -34,6 +33,7 @@
       </form>
     </main>
   </div>
+
   <%- include('../partials/footer') %>
 </body>
 </html>

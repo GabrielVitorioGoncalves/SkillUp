@@ -68,7 +68,7 @@ async function verificarAdmExistente(usuario,email){
 
 async function cadastrarAdmin(usuario, email, senha){
     const conex = await conectarBD();
-    const sql = "insert into admin(adm_nome=?,adm_email=?,adm_senha=?) values (?,?,?);"
+    const sql = "insert into admin(adm_nome,adm_email,adm_senha) values (?,?,?);"
     await conex.query(sql,[usuario,email,senha]);
 }
 

@@ -65,10 +65,10 @@ router.post('/cadastroAdm', async function(req,res,next){
 const {usuario,email,senha} = req.body
 const verificarAdm = await global.banco.verificarAdmExistente(usuario,email);
 if(verificarAdm){
-  return res.render('CadastroAdm')
+  return res.render('admin/cadastroAdm')
 };
 
-const admin = await global.banco.cadastrarUsuario(usuario,email,senha);
+const admin = await global.banco.cadastrarAdmin(usuario,email,senha);
 res.redirect('/principalAdm')
 
 })
