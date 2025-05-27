@@ -38,13 +38,24 @@ router.get('/categorias', async function (req, res, next) {
   verificarLogin(res);
   const cate = await global.banco.admBuscarCategorias();
 
+  let mensagem = null;
+  let sucesso = false;
+
+  if (req.query.sucesso === 'true') {
+    mensagem = "Categoria excluída com sucesso.";
+    sucesso = true;
+  } else if (req.query.erro === 'notfound') {
+    mensagem = "A categoria não foi encontrada.";
+  }
+
   res.render('admin/categorias', {
     cat_nome: global.cat_nome,
     cate,
-    mensagem: null,
-    sucesso: false
+    mensagem,
+    sucesso
   });
-})
+});
+
 
 router.get('/categorianova', async function (req, res, next) {
   verificarLogin(res);
@@ -102,7 +113,7 @@ router.get('/categoriasAtualizadas/:id', async function (req, res, next) {
 
   const cat = await global.banco.admBuscarCategoriaPorCodigo(codigo);
   if (!cat) {
-    return res.render('/admin/categoria_atualizada', {
+    return res.render('admin/categorias_atualizada', {
       cat_nome: global.cat_nome,
       mensagem: 'A categoria não foi encontrada.',
       sucesso: false
@@ -123,6 +134,9 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
   const id_tema = req.params.id;
   const cat_nome = req.body.cat_nome;
 
+  console.log("ID do tema:", id_tema);
+  console.log("Nome da categoria:", cat_nome);
+
   if (!cat_nome) {
 
     return res.render('admin/categorias_atualizada', {
@@ -137,7 +151,7 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
 
   const catExistente = await global.banco.admBuscarCategoria(cat_nome);
   if (catExistente) {
-    return res.render('admin/categoria_atualizada', {
+    return res.render('admin/categorias_atualizada', {
       cat_nome: global.cat_nome,
       categoria: { id_tema, cat_nome },
       mensagem: "Essa categoria já existe.",
@@ -147,7 +161,7 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
 
   //Gravando as alterações feitas
 
-  await global.banco.admAtualizarCategoria(id_tema,cat_nome);
+  await global.banco.admAtualizarCategoria(cat_nome, id_tema);
   return res.render('admin/categorias_atualizada',{
     cat_nome: global.cat_nome,
     categoria : {id_tema, cat_nome},
@@ -158,33 +172,19 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
 })
 
 router.get('/excluircategoria/:id', async function(req,res,next) {
-  verificarLogin(res)
+  verificarLogin(res);
   const id_tema = req.params.id;
-
-  //Verificando se a categoria existe
 
   const categoria = await global.banco.admBuscarCategoriaPorCodigo(id_tema);
 
-  if(!categoria){
-    return res.render('admin/categorias',{
-      cat_nome: global.cat_nome,
-      cate : await global.banco.admBuscarCategorias(),
-      mensagem: "A categoria não foi encontrada",
-      sucesso : false
-    });
+  if (!categoria) {
+    // Redireciona para a listagem com mensagem de erro
+    return res.redirect('/admin/categorias?erro=notfound');
   }
 
-  //Apagando a categoria
   await global.banco.admExcluirCategoria(id_tema);
-
-  res.render('admin/categorias',{
-    cat_nome: global.cat_nome,
-    cate : await global.banco.admBuscarCategorias(),
-    mensagem: "Categoria excluída com sucesso",
-    sucesso: true
-  })
-  
-})
+  res.redirect('/admin/categorias?sucesso=true');
+});
 
 /**
  * Rotas dos temas
