@@ -101,9 +101,10 @@ async function admExcluirCategoria(id_tema) {
 
 async function admAtualizarCategoria(cat_nome,id_tema) {
     const conex = await conectarBD();
-    const sql = "update temas set cat_nome=? where id_tema=?";
+    const sql = `update temas set cat_nome=? where id_tema=?`;
     await conex.query(sql,[cat_nome,id_tema]);
 }
+
 async function admBuscarCategoriaPorCodigo(codigo) { 
     const conex = await conectarBD();
     const sql =  "select * from temas where id_tema=?";
