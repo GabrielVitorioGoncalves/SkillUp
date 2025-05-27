@@ -34,11 +34,11 @@ router.get('/principalAdm', async function (req, res, next) {
  * Rotas para as categorias
  */
 
-router.get('/categorias', async function (req,res,next) {
+router.get('/categorias', async function (req, res, next) {
   verificarLogin(res);
   const cate = await global.banco.admBuscarCategorias();
 
-  res.render('admin/categorias',{
+  res.render('admin/categorias', {
     cat_nome: global.cat_nome,
     cate,
     mensagem: null,
@@ -46,9 +46,9 @@ router.get('/categorias', async function (req,res,next) {
   });
 })
 
-router.get('/categorianova', async function (req,res,next){
+router.get('/categorianova', async function (req, res, next) {
   verificarLogin(res);
-  res.render('admin/categoria_nova',{
+  res.render('admin/categoria_nova', {
     cat_nome: global.cat_nome,
     mensagem: null,
     sucesso: false
@@ -58,16 +58,16 @@ router.get('/categorianova', async function (req,res,next){
 
 //Post para a pegar o formulario da categoria nova
 
-router.post('/categorianova', async function (req,res,next) {
+router.post('/categorianova', async function (req, res, next) {
   verificarLogin(res);
 
   const cat_nome = req.body.cat_nome
 
   //Verificação se o nome esta em branco
-  if(!cat_nome){
-    return res.render('admin/categoria_nova',{
-      cat_nome : global.cat_nome,
-      mensagem : 'O campo deve ser preenchido',
+  if (!cat_nome) {
+    return res.render('admin/categoria_nova', {
+      cat_nome: global.cat_nome,
+      mensagem: 'O campo deve ser preenchido',
       sucesso: false
     })
   }
@@ -76,36 +76,119 @@ router.post('/categorianova', async function (req,res,next) {
   // está duplicado
 
   const categoriaExistente = await global.banco.admBuscarCategoria(cat_nome);
-  if(categoriaExistente){
-    return res.render('admin/categoria_nova',{
-      cat_nome : global.cat_nome,
-      mensagem : 'Essa categoria já Existe no banco de Dados',
-      sucesso : false
+  if (categoriaExistente) {
+    return res.render('admin/categoria_nova', {
+      cat_nome: global.cat_nome,
+      mensagem: 'Essa categoria já Existe no banco de Dados',
+      sucesso: false
     });
   }
 
   //Agora caso o nome nao esteja em branco nem exista algum nome igual no devemos inserir o dado no banco
 
   await global.banco.admInserirCategoria(cat_nome);
-  return res.render('admin/categoria_nova',{
-    cat_nome : global.cat_nome,
-    mensagem : 'Categoria criada com sucesso.',
-    sucesso : true
+  return res.render('admin/categoria_nova', {
+    cat_nome: global.cat_nome,
+    mensagem: 'Categoria criada com sucesso.',
+    sucesso: true
   });
 })
 
+//Atualização de curso
 
+router.get('/categoriasAtualizadas/:id', async function (req, res, next) {
+  verificarLogin(res);
+  const codigo = parseInt(req.params.id);
 
+  const cat = await global.banco.admBuscarCategoriaPorCodigo(codigo);
+  if (!cat) {
+    return res.render('/admin/categoria_atualizada', {
+      cat_nome: global.cat_nome,
+      mensagem: 'A categoria não foi encontrada.',
+      sucesso: false
+    });
+  }
 
+  res.render('admin/categorias_atualizada', {
+    cat_nome: global.cat_nome,
+    categoria: cat,
+    mensagem: null,
+    sucesso: false
+  })
 
+})
 
+router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
 
+  const id_tema = req.params.id;
+  const cat_nome = req.body.cat_nome;
 
+  if (!cat_nome) {
 
+    return res.render('admin/categorias_atualizada', {
+      cat_nome: global.cat_nome,
+      categoria: { id_tema, cat_nome },
+      mensagem: "Preencha os campos obrigatorios.",
+      sucesso: false
+    });
+  }
 
+  //Verificando se o nome esta duplicado
 
+  const catExistente = await global.banco.admBuscarCategoria(cat_nome);
+  if (catExistente) {
+    return res.render('admin/categoria_atualizada', {
+      cat_nome: global.cat_nome,
+      categoria: { id_tema, cat_nome },
+      mensagem: "Essa categoria já existe.",
+      sucesso: false
+    })
+  }
 
+  //Gravando as alterações feitas
 
+  await global.banco.admAtualizarCategoria(id_tema,cat_nome);
+  return res.render('admin/categorias_atualizada',{
+    cat_nome: global.cat_nome,
+    categoria : {id_tema, cat_nome},
+    mensagem: "Categoria atualizada com sucesso.",
+    sucesso : true
+  })
+
+})
+
+router.get('/excluircategoria/:id', async function(req,res,next) {
+  verificarLogin(res)
+  const id_tema = req.params.id;
+
+  //Verificando se a categoria existe
+
+  const categoria = await global.banco.admBuscarCategoriaPorCodigo(id_tema);
+
+  if(!categoria){
+    return res.render('admin/categorias',{
+      cat_nome: global.cat_nome,
+      cate : await global.banco.admBuscarCategorias(),
+      mensagem: "A categoria não foi encontrada",
+      sucesso : false
+    });
+  }
+
+  //Apagando a categoria
+  await global.banco.admExcluirCategoria(id_tema);
+
+  res.render('admin/categorias',{
+    cat_nome: global.cat_nome,
+    cate : await global.banco.admBuscarCategorias(),
+    mensagem: "Categoria excluída com sucesso",
+    sucesso: true
+  })
+  
+})
+
+/**
+ * Rotas dos temas
+ */
 router.get('/Temas', async function (req, res, next) {
   res.render('temas', { title: 'Temas' });
 });
@@ -131,55 +214,33 @@ function verificarLogin(res) {
   }
 }
 
-router.get('/cadastroAdm', async function (req,res,next) {
+/**
+ * Rotas de Cadastro do Adm
+ */
+
+router.get('/cadastroAdm', async function (req, res, next) {
   verificarLogin(res);
   res.render('admin/cadastroAdm');
-  
-})
-
-router.post('/cadastroAdm', async function(req,res,next){
-
-const {usuario,email,senha} = req.body
-const verificarAdm = await global.banco.verificarAdmExistente(usuario,email);
-if(verificarAdm){
-  return res.render('admin/cadastroAdm')
-};
-
-const admin = await global.banco.cadastrarAdmin(usuario,email,senha);
-res.redirect('/principalAdm')
 
 })
 
+router.post('/cadastroAdm', async function (req, res, next) {
 
+  const { usuario, email, senha } = req.body
+  const verificarAdm = await global.banco.verificarAdmExistente(usuario, email);
+  if (verificarAdm) {
+    return res.render('admin/cadastroAdm')
+  };
 
+  const admin = await global.banco.cadastrarAdmin(usuario, email, senha);
+  res.redirect('/principalAdm')
 
+})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// post para criação de curso 
-router.post('/cria-curso', upload.single('capa'), async function(req, res) {
+/**
+ * Rota Criação do curso
+ */
+router.post('/cria-curso', upload.single('capa'), async function (req, res) {
   const { nome, descricao, categoria } = req.body;
   const capa = req.file ? '/uploads/capas/' + req.file.filename : null;
 

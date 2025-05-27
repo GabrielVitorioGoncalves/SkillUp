@@ -93,16 +93,16 @@ function calcularMediaDoCurso(avaliacoes) {
     const media = soma / avaliacoes.length;
     return parseFloat(media.toFixed(1)); 
 }
-async function admExcluirCategoria(codigo) {
+async function admExcluirCategoria(id_tema) {
     const conex =  await conectarBD();
     const sql = "delete from temas where id_tema=?";
-    await conex.query(sql,[codigo]) 
+    await conex.query(sql,[id_tema]) 
 }
 
-async function admAtualizarCategoria(nome,codigo) {
+async function admAtualizarCategoria(cat_nome,id_tema) {
     const conex = await conectarBD();
     const sql = "update temas set cat_nome=? where id_tema=?";
-    await conex.query(sql,[nome,codigo]);
+    await conex.query(sql,[cat_nome,id_tema]);
 }
 async function admBuscarCategoriaPorCodigo(codigo) { 
     const conex = await conectarBD();
