@@ -109,7 +109,7 @@ router.post('/categorianova', async function (req, res, next) {
 
 router.get('/categoriasAtualizadas/:id', async function (req, res, next) {
   verificarLogin(res);
-  const codigo = parseInt(req.params.id);
+  const codigo = req.params.id;
 
   const cat = await global.banco.admBuscarCategoriaPorCodigo(codigo);
   if (!cat) {

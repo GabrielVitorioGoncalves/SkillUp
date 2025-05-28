@@ -107,7 +107,7 @@ async function admAtualizarCategoria(cat_nome,id_tema) {
 
 async function admBuscarCategoriaPorCodigo(codigo) { 
     const conex = await conectarBD();
-    const sql =  "select * from temas where id_tema=?";
+    const sql =  "select * from temas where id_tema=?;";
     const [categorias] = await conex.query(sql,[codigo]);
     return categorias[0] || null; 
 }

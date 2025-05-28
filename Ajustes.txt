@@ -1,8 +1,5 @@
 Ajustes que terao que ser feito
 1 - Depois que cadastra o Adm por algum motivo da erro para voltar a pagina de dashboard
 2 - Fazer de alguma forma toda vez que um administrador e criado aparecer e uma tabela nova so para mostrar quem são os administradores
-
-Oque falta fazer 
-1 - CRUD da paginda de categorias
-2 - Paginda de categorias
-3 - Fazer igual ao professor a questão de id toda vez que o usuario entra (nao sei se isso ja esta feito)
+3- Ajustar o html nas paginas para deixar identico
+ 
