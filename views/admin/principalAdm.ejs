@@ -5,18 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill UP - Cursos</title>
  <link rel='stylesheet' href="../../stylesheets/principalAdm.css">
+  <link rel='stylesheet' href="../../stylesheets/sidebarAdmin.css">
 </head>
 <body>
   <div class="page-wrapper">
-  <aside class="sidebar">
-      <h2>Skill <span>UP</span></h2>
-      <nav>
-        <a href="principalAdm" class="active">Dashboard</a>
-        <a href="temas"> Cursos</a>
-        <a href="cadastroAdm">Administrador</a>
-        <a href="categorias">Categorias</a>
-      </nav>
-    </aside>
+    <%- include('../partials/admin/sidebar') %>
 
     <main class="main-content">
       <section class="stats">

@@ -10,43 +10,11 @@ body {
   height: 100vh;
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #2a2a2a;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  color: white;
-  margin-bottom: 30px;
-  font-size: 18px;
-}
-
-.sidebar h2 span {
-  color: #00aaff;
-}
-
-.sidebar nav a {
-  display: flex;
-  align-items: center;
-  color: white;
-  text-decoration: none;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  transition: background 0.3s;
-}
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
-  background-color: #00aaff;
-  color: white;
-}
-
 .main-content {
   flex: 1;
   padding: 40px;
   display: flex;
+  margin-left: 290px;
   flex-direction: column;
   gap: 20px;
 }

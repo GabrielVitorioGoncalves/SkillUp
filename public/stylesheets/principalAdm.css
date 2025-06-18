@@ -18,38 +18,9 @@ body {
   flex: 1;
 }
 
-/* --- Sidebar --- */
-.sidebar {
-  width: 180px;
-  background: #1e1e1e;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  color: #fff;
-  font-size: 20px;
-  margin-bottom: 30px;
-}
-.sidebar h2 span {
-  color: #00aaff;
-}
-
-.sidebar nav a {
-  display: block;
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.sidebar nav a.active {
-  background: #00aaff;
-  color: #fff;
-}
-
 .main-content {
   flex: 1;
+  margin-left: 250px;
   padding: 20px;
 }
 

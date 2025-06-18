@@ -15,38 +15,11 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background-color: #1f1f1f;
-  padding: 20px;
-}
-
-.logo {
-  font-size: 1.5rem;
-  margin-bottom: 40px;
-}
-
-.logo span {
-  color: #3ba4ff;
-}
-
-.sidebar nav a {
-  display: block;
-  color: white;
-  margin-bottom: 20px;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.sidebar nav a:hover {
-  color: #3ba4ff;
-}
-
 /* Main Content */
 .main-content {
   flex: 1;
   padding: 40px;
+  margin-left: 250px;
   background: linear-gradient(to bottom, #1a1a1a, #0d0d0d);
   border-top-left-radius: 20px;
 }

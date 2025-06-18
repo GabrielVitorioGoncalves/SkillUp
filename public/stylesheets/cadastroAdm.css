@@ -11,56 +11,12 @@ body {
   overflow: hidden;
 }
 
-.sidebar {
-  width: 220px;
-  background-color: #141414;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-  color: white;
-}
-
-.logo span {
-  color: #00aaff;
-}
-
-.nav-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.nav-menu a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #ccc;
-  padding: 12px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  font-weight: 500;
-}
-
-.nav-menu a:hover {
-  background-color: #333;
-  color: white;
-}
-
-.nav-menu a.active {
-  background-color: #00aaff;
-  color: white;
-}
-
 .main-content {
   flex: 1;
   padding: 40px;
   display: flex;
+  margin-left: 250px;
+
   flex-direction: column;
   align-items: center;
   justify-content: center;

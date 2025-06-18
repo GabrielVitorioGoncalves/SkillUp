@@ -22,6 +22,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  res.locals.currentUrl = req.url;
+  next();
+});
+
+
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 
