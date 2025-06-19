@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="../stylesheets/cadastroAdm.css">
   <link rel="stylesheet" href="../stylesheets/sidebarAdmin.css">
   <link rel="stylesheet" href="../stylesheets/footer.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
@@ -13,20 +14,38 @@
     <%- include('../partials/admin/sidebar') %>
 
     <main class="main-content">
-      <h2>Cadastrar Administrador</h2>
-      <form action="/admin/cadastroAdm" method="POST" class="form-admin">
-        <label for="usuario">Nome do Usuário</label>
-        <input type="text" id="usuario" name="usuario" required>
+      <div class="user-container">
+        <div class="user-header">
+          <h2>Administradores</h2>
+          <a href="/admin/cadastroadmnovo"><button class="btn-add">+ Incluir Administrador</button></a>
+        </div>
 
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" required>
-
-        <button type="submit">Cadastrar</button>
-      </form>
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (admins.length > 0) { %>
+              <% admins.forEach(function(admin, index) { %>
+                <tr class="<%= index === 0 ? 'highlight-row' : '' %>">
+                  <td><%= admin.adm_email %></td>
+                  <td>
+                    <a href="/admin/editaradm/<%= admin.id_admin %>" class="icon-btn"><i class="fas fa-pen-to-square"></i></a>
+                    <a href="/admin/excluiradm/<%= admin.id_admin %>" class="icon-btn delete"><i class="fas fa-trash"></i></a>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr><td colspan="2">Nenhum administrador cadastrado.</td></tr>
+            <% } %>
+          </tbody>          
+        </table>
+      </div>
     </main>
+
   </div>
 
   <%- include('../partials/footer') %>

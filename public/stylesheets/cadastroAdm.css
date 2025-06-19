@@ -76,3 +76,71 @@ body {
 .form-admin button:hover {
   background-color: #3594e5;
 }
+
+
+.user-container {
+  background-color: #1e293b;
+  width: 80%;
+  border-radius: 8px;
+  padding: 20px;
+  color: #fff;
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-header h2 {
+  margin: 0;
+}
+
+.btn-add {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  color: #ccc;
+}
+
+tr {
+  border-bottom: 1px solid #2c3e50;
+}
+
+tr:hover {
+  background-color: #334155;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3b82f6;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.icon-btn.delete {
+  color: #ef4444;
+}
+
+.highlight-row {
+  background-color: #475569;
+}

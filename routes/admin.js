@@ -171,6 +171,28 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
 
 })
 
+// CadastroAdmNovo
+
+router.get('/cadastroAdm', async function (req, res, next) {
+  verificarLogin(res);
+  const admins = await global.banco.buscarTodosAdmins(); 
+  res.render('admin/cadastroAdm', {
+    admins,
+    mensagem: null,
+    sucesso: false
+  });
+});
+
+router.get('/cadastroadmnovo', async function (req, res, next) {
+  verificarLogin(res);
+  res.render('admin/cadastroAdmNovo', {
+    mensagem: null,
+    sucesso: false,
+    usuario: '',
+    email: ''
+  });
+});
+
 router.get('/excluircategoria/:id', async function(req,res,next) {
   verificarLogin(res);
   const id_tema = req.params.id;
@@ -218,24 +240,70 @@ function verificarLogin(res) {
  * Rotas de Cadastro do Adm
  */
 
-router.get('/cadastroAdm', async function (req, res, next) {
+router.get('/cadastroAdm', async function (req, res) {
   verificarLogin(res);
-  res.render('admin/cadastroAdm');
+  const admins = await global.banco.buscarTodosAdmins(); // pega os admins
 
-})
+  res.render('admin/cadastroAdm', {
+    mensagem: null,
+    sucesso: false,
+    usuario: '',
+    email: '',
+    admins
+  });
+});
 
-router.post('/cadastroAdm', async function (req, res, next) {
 
-  const { usuario, email, senha } = req.body
+router.post('/cadastroAdm', async function (req, res) {
+  const { usuario, email, senha } = req.body;
+  const admins = await global.banco.buscarTodosAdmins();
+
+  if (!usuario || !email || !senha) {
+    return res.render('admin/cadastroAdm', {
+      mensagem: 'Preencha todos os campos.',
+      sucesso: false,
+      usuario,
+      email,
+      admins
+    });
+  }
+
   const verificarAdm = await global.banco.verificarAdmExistente(usuario, email);
   if (verificarAdm) {
-    return res.render('admin/cadastroAdm')
-  };
+    return res.render('admin/cadastroAdm', {
+      mensagem: 'Esse administrador já existe.',
+      sucesso: false,
+      usuario,
+      email,
+      admins
+    });
+  }
 
-  const admin = await global.banco.cadastrarAdmin(usuario, email, senha);
-  res.redirect('/principalAdm')
+  await global.banco.cadastrarAdmin(usuario, email, senha);
 
-})
+  const novosAdmins = await global.banco.buscarTodosAdmins(); // recarrega admins após inserir
+  return res.render('admin/cadastroAdm', {
+    mensagem: 'Administrador cadastrado com sucesso!',
+    sucesso: true,
+    usuario: '',
+    email: '',
+    admins: novosAdmins
+  });
+});
+
+
+router.get('/excluiradm/:id', async (req, res) => {
+  const adminId = req.params.id;
+
+  try {
+    await global.banco.excluirAdmin(adminId); 
+    res.redirect('/admin/cadastroadm');
+  } catch (error) {
+    console.error('Erro ao excluir administrador:', error);
+    res.status(500).send('Erro ao excluir administrador');
+  }
+});
+
 
 /**
  * Rota Criação do curso

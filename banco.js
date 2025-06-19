@@ -58,6 +58,14 @@ async function buscarAdmin(admin){
     }
 };
 
+async function buscarTodosAdmins() {
+    const conexao = await conectarBD();
+    const [rows] = await conexao.query('SELECT id_admin, adm_email FROM admin');
+    return rows;
+  }  
+
+
+
 async function verificarAdmExistente(usuario,email){
     const conex = await conectarBD();
     const sql = "select * from admin where adm_email=? and adm_senha=?;"
@@ -71,6 +79,16 @@ async function cadastrarAdmin(usuario, email, senha){
     const sql = "insert into admin(adm_nome,adm_email,adm_senha) values (?,?,?);"
     await conex.query(sql,[usuario,email,senha]);
 }
+
+async function excluirAdmin(id_admin) {
+    const conexao = await conectarBD(); // Função que conecta ao BD
+    try {
+      // Query para excluir admin pelo id
+      await conexao.query('DELETE FROM admin WHERE id_admin = ?', [id_admin]);
+    } catch (err) {
+        throw err;
+      }
+  }
 
 /**
  * Funções para usar futuramente
@@ -133,4 +151,13 @@ async function admBuscarCategoria(nome) {
 
 
 
-module.exports = {conectarBD, buscarUsuario, buscarAdmin, verificarUsuarioExistente, cadastrarUsuario, buscarNotasPorCurso, calcularMediaDoCurso, verificarAdmExistente, cadastrarAdmin, admExcluirCategoria, admAtualizarCategoria,admBuscarCategoriaPorCodigo,admInserirCategoria,admBuscarCategoria, admBuscarCategorias}
+module.exports = {
+    conectarBD, buscarUsuario, 
+    buscarAdmin, verificarUsuarioExistente, 
+    cadastrarUsuario, buscarNotasPorCurso, 
+    calcularMediaDoCurso, verificarAdmExistente, 
+    cadastrarAdmin, admExcluirCategoria, 
+    admAtualizarCategoria,admBuscarCategoriaPorCodigo,
+    admInserirCategoria,admBuscarCategoria, 
+    admBuscarCategorias, buscarTodosAdmins, excluirAdmin
+}
