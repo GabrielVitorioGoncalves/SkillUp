@@ -90,6 +90,23 @@ async function excluirAdmin(id_admin) {
       }
   }
 
+
+async function atualizarAdmin(id, nome, email) {
+  const conexao = await conectarBD();
+  await conexao.query('UPDATE admin SET adm_nome = ?, adm_email = ? WHERE id_admin = ?', [nome, email, id]);
+}
+
+async function buscarAdminPorId(id) {
+  const conexao = await conectarBD();
+  const [linhas] = await conexao.query(
+    'SELECT * FROM admin WHERE id_admin = ?',
+    [id]
+  );
+  return linhas[0]; // retorna apenas um objeto (o admin)
+}
+
+
+
 /**
  * Funções para usar futuramente
  */
@@ -159,5 +176,5 @@ module.exports = {
     cadastrarAdmin, admExcluirCategoria, 
     admAtualizarCategoria,admBuscarCategoriaPorCodigo,
     admInserirCategoria,admBuscarCategoria, 
-    admBuscarCategorias, buscarTodosAdmins, excluirAdmin
+    admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId
 }

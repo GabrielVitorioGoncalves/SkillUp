@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-//teste com multer (upload)
+
+// ----- Pacotes e Configuração Inicial -----
 const multer = require('multer');
 const path = require('path');
 const banco = require('../banco');
 
-// Configurar armazenamento do Multer
+// Configuração do Multer (upload de imagens)
 const armazena = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, '../public/uploads/capas'));
@@ -16,31 +17,45 @@ const armazena = multer.diskStorage({
     cb(null, nomeArquivo);
   }
 });
-
 const upload = multer({ storage: armazena });
 
-// Rotas principais do Admin 
-router.get('/', function (req, res, next) {
+/* ----- Função de Verificação de Login ----- */
+function verificarLogin(res) {
+  if (!global.adm_email || global.adm_email == "") {
+    res.redirect('/admin');
+  }
+}
+
+/* ----- Admin: Tela Inicial e Login ----- */
+router.get('/', function (req, res) {
   res.render('admin/admin');
 });
 
-router.get('/principalAdm', async function (req, res, next) {
+router.post('/loginadmin', async function (req, res) {
+  const { email, senha } = req.body;
+  const admin = await global.banco.buscarAdmin({ email, senha });
+
+  if (admin.id_admin) {
+    global.id_admin = admin.id_admin;
+    global.adm_email = admin.adm_email;
+    res.redirect('/admin/principalAdm');
+  } else {
+    res.redirect('/admin');
+  }
+});
+
+router.get('/principalAdm', async function (req, res) {
   verificarLogin(res);
   res.render('admin/principalAdm');
 });
 
-
-/**
- * Rotas para as categorias
- */
-
-router.get('/categorias', async function (req, res, next) {
+/* ----- Categorias: CRUD ----- */
+router.get('/categorias', async function (req, res) {
   verificarLogin(res);
   const cate = await global.banco.admBuscarCategorias();
 
   let mensagem = null;
   let sucesso = false;
-
   if (req.query.sucesso === 'true') {
     mensagem = "Categoria excluída com sucesso.";
     sucesso = true;
@@ -56,35 +71,26 @@ router.get('/categorias', async function (req, res, next) {
   });
 });
 
-
-router.get('/categorianova', async function (req, res, next) {
+router.get('/categorianova', async function (req, res) {
   verificarLogin(res);
   res.render('admin/categoria_nova', {
     cat_nome: global.cat_nome,
     mensagem: null,
     sucesso: false
-  })
-})
+  });
+});
 
-
-//Post para a pegar o formulario da categoria nova
-
-router.post('/categorianova', async function (req, res, next) {
+router.post('/categorianova', async function (req, res) {
   verificarLogin(res);
+  const cat_nome = req.body.cat_nome;
 
-  const cat_nome = req.body.cat_nome
-
-  //Verificação se o nome esta em branco
   if (!cat_nome) {
     return res.render('admin/categoria_nova', {
       cat_nome: global.cat_nome,
       mensagem: 'O campo deve ser preenchido',
       sucesso: false
-    })
+    });
   }
-
-  // Outra verificação para saber se o nome
-  // está duplicado
 
   const categoriaExistente = await global.banco.admBuscarCategoria(cat_nome);
   if (categoriaExistente) {
@@ -95,19 +101,15 @@ router.post('/categorianova', async function (req, res, next) {
     });
   }
 
-  //Agora caso o nome nao esteja em branco nem exista algum nome igual no devemos inserir o dado no banco
-
   await global.banco.admInserirCategoria(cat_nome);
   return res.render('admin/categoria_nova', {
     cat_nome: global.cat_nome,
     mensagem: 'Categoria criada com sucesso.',
     sucesso: true
   });
-})
+});
 
-//Atualização de curso
-
-router.get('/categoriasAtualizadas/:id', async function (req, res, next) {
+router.get('/categoriasAtualizadas/:id', async function (req, res) {
   verificarLogin(res);
   const codigo = req.params.id;
 
@@ -125,20 +127,14 @@ router.get('/categoriasAtualizadas/:id', async function (req, res, next) {
     categoria: cat,
     mensagem: null,
     sucesso: false
-  })
+  });
+});
 
-})
-
-router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
-
+router.post('/categoriasAtualizadas/:id', async function (req, res) {
   const id_tema = req.params.id;
   const cat_nome = req.body.cat_nome;
 
-  console.log("ID do tema:", id_tema);
-  console.log("Nome da categoria:", cat_nome);
-
   if (!cat_nome) {
-
     return res.render('admin/categorias_atualizada', {
       cat_nome: global.cat_nome,
       categoria: { id_tema, cat_nome },
@@ -147,8 +143,6 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
     });
   }
 
-  //Verificando se o nome esta duplicado
-
   const catExistente = await global.banco.admBuscarCategoria(cat_nome);
   if (catExistente) {
     return res.render('admin/categorias_atualizada', {
@@ -156,51 +150,24 @@ router.post('/categoriasAtualizadas/:id', async function (req, res, next) {
       categoria: { id_tema, cat_nome },
       mensagem: "Essa categoria já existe.",
       sucesso: false
-    })
+    });
   }
 
-  //Gravando as alterações feitas
-
   await global.banco.admAtualizarCategoria(cat_nome, id_tema);
-  return res.render('admin/categorias_atualizada',{
+  return res.render('admin/categorias_atualizada', {
     cat_nome: global.cat_nome,
-    categoria : {id_tema, cat_nome},
+    categoria: { id_tema, cat_nome },
     mensagem: "Categoria atualizada com sucesso.",
-    sucesso : true
-  })
-
-})
-
-// CadastroAdmNovo
-
-router.get('/cadastroAdm', async function (req, res, next) {
-  verificarLogin(res);
-  const admins = await global.banco.buscarTodosAdmins(); 
-  res.render('admin/cadastroAdm', {
-    admins,
-    mensagem: null,
-    sucesso: false
+    sucesso: true
   });
 });
 
-router.get('/cadastroadmnovo', async function (req, res, next) {
-  verificarLogin(res);
-  res.render('admin/cadastroAdmNovo', {
-    mensagem: null,
-    sucesso: false,
-    usuario: '',
-    email: ''
-  });
-});
-
-router.get('/excluircategoria/:id', async function(req,res,next) {
+router.get('/excluircategoria/:id', async function (req, res) {
   verificarLogin(res);
   const id_tema = req.params.id;
 
   const categoria = await global.banco.admBuscarCategoriaPorCodigo(id_tema);
-
   if (!categoria) {
-    // Redireciona para a listagem com mensagem de erro
     return res.redirect('/admin/categorias?erro=notfound');
   }
 
@@ -208,42 +175,10 @@ router.get('/excluircategoria/:id', async function(req,res,next) {
   res.redirect('/admin/categorias?sucesso=true');
 });
 
-/**
- * Rotas dos temas
- */
-router.get('/Temas', async function (req, res, next) {
-  res.render('temas', { title: 'Temas' });
-});
-
-router.post('/loginadmin', async function (req, res, next) {
-  const email = req.body.email;
-  const senha = req.body.senha;
-
-  const admin = await global.banco.buscarAdmin({ email, senha });
-
-  if (admin.id_admin) {
-    global.id_admin = admin.id_admin;
-    global.adm_email = admin.adm_email;
-    res.redirect('/admin/principalAdm');
-  } else {
-    res.redirect('/admin');
-  }
-});
-
-function verificarLogin(res) {
-  if (!global.adm_email || global.adm_email == "") {
-    res.redirect('/admin');
-  }
-}
-
-/**
- * Rotas de Cadastro do Adm
- */
-
+/* ----- Administradores: Cadastro, Listagem, Exclusão ----- */
 router.get('/cadastroAdm', async function (req, res) {
   verificarLogin(res);
-  const admins = await global.banco.buscarTodosAdmins(); // pega os admins
-
+  const admins = await global.banco.buscarTodosAdmins();
   res.render('admin/cadastroAdm', {
     mensagem: null,
     sucesso: false,
@@ -252,7 +187,6 @@ router.get('/cadastroAdm', async function (req, res) {
     admins
   });
 });
-
 
 router.post('/cadastroAdm', async function (req, res) {
   const { usuario, email, senha } = req.body;
@@ -280,8 +214,8 @@ router.post('/cadastroAdm', async function (req, res) {
   }
 
   await global.banco.cadastrarAdmin(usuario, email, senha);
+  const novosAdmins = await global.banco.buscarTodosAdmins();
 
-  const novosAdmins = await global.banco.buscarTodosAdmins(); // recarrega admins após inserir
   return res.render('admin/cadastroAdm', {
     mensagem: 'Administrador cadastrado com sucesso!',
     sucesso: true,
@@ -291,12 +225,21 @@ router.post('/cadastroAdm', async function (req, res) {
   });
 });
 
+router.get('/cadastroadmnovo', async function (req, res) {
+  verificarLogin(res);
+  res.render('admin/cadastroAdmNovo', {
+    mensagem: null,
+    sucesso: false,
+    usuario: '',
+    email: ''
+  });
+});
 
-router.get('/excluiradm/:id', async (req, res) => {
+router.get('/excluiradm/:id', async function (req, res) {
   const adminId = req.params.id;
 
   try {
-    await global.banco.excluirAdmin(adminId); 
+    await global.banco.excluirAdmin(adminId);
     res.redirect('/admin/cadastroadm');
   } catch (error) {
     console.error('Erro ao excluir administrador:', error);
@@ -304,14 +247,58 @@ router.get('/excluiradm/:id', async (req, res) => {
   }
 });
 
+router.get('/editaradm/:id', async function (req, res) {
+  verificarLogin(res);
+  const id = req.params.id;
 
-/**
- * Rota Criação do curso
- */
+  const admin = await global.banco.buscarAdminPorId(id);
+  if (!admin) {
+    return res.redirect('/admin/cadastroAdm');
+  }
+
+  res.render('admin/cadastroAdmAtualizada', {
+    admin,
+    mensagem: null,
+    sucesso: false
+  });
+});
+
+router.post('/cadastroAdmAtualizada/:id', async function (req, res) {
+  const id_admin = req.params.id;
+  const { usuario, email } = req.body;
+
+  if (!usuario || !email) {
+    return res.render('admin/cadastroAdmAtualizada', {
+      admin: { id_admin, adm_nome: usuario, adm_email: email },
+      mensagem: 'Preencha todos os campos.',
+      sucesso: false
+    });
+  }
+
+  // Verifica duplicidade (se o novo e-mail já pertence a outro)
+  const existente = await global.banco.verificarAdmExistente(usuario, email);
+  if (existente && existente.id_admin != id_admin) {
+    return res.render('admin/cadastroAdmAtualizada', {
+      admin: { id_admin, adm_nome: usuario, adm_email: email },
+      mensagem: 'Já existe um administrador com esse nome ou email.',
+      sucesso: false
+    });
+  }
+
+  await global.banco.atualizarAdmin(id_admin, usuario, email);
+
+  res.render('admin/cadastroAdmAtualizada', {
+    admin: { id_admin, adm_nome: usuario, adm_email: email },
+    mensagem: 'Administrador atualizado com sucesso!',
+    sucesso: true
+  });
+});
+
+
+/* ----- Cursos: Criação ----- */
 router.post('/cria-curso', upload.single('capa'), async function (req, res) {
   const { nome, descricao, categoria } = req.body;
   const capa = req.file ? '/uploads/capas/' + req.file.filename : null;
-
 
   const conexao = await global.banco.conectarBD();
   try {
@@ -326,6 +313,11 @@ router.post('/cria-curso', upload.single('capa'), async function (req, res) {
   } finally {
     conexao.end();
   }
+});
+
+/* ----- Temas: Página Inicial (placeholder) ----- */
+router.get('/Temas', async function (req, res) {
+  res.render('temas', { title: 'Temas' });
 });
 
 module.exports = router;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Administrador</title>
+  <link rel="stylesheet" href="/stylesheets/cadastroAdm.css">
+  <link rel="stylesheet" href="/stylesheets/sidebarAdmin.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <%- include('../partials/admin/sidebar') %>
+
+      <main class="main-content">
+        <div class="edit-admin-container">
+          <h2>Editar Administrador</h2>
+
+          <% if (mensagem) { %>
+            <div class="<%= sucesso ? 'msg-success' : 'msg-error' %>">
+              <%= mensagem %>
+            </div>
+            <% } %>
+
+              <form action="/admin/cadastroAdmAtualizada/<%= admin.id_admin %>" method="POST" class="edit-admin-form">
+                <div>
+                  <label for="usuario">Nome do Usuário</label>
+                  <input type="text" id="usuario" name="usuario" value="<%= admin.adm_nome %>" required>
+                </div>
+
+                <div>
+                  <label for="email">E-mail</label>
+                  <input type="email" id="email" name="email" value="<%= admin.adm_email %>" required>
+                </div>
+
+                <div class="edit-admin-actions">
+                  <button type="submit" class="btn-save">Salvar</button>
+                  <a href="/admin/cadastroAdm" class="btn-cancel">Cancelar</a>
+                </div>
+              </form>
+        </div>
+
+      </main>
+
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+
+</html>
