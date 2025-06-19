@@ -1,5 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
+const multer = require('multer');
+
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -21,6 +23,30 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Configuração do Multer para upload de arquivos
+const storage = multer.diskStorage({
+ destination: (req, file, cb) => {
+ cb(null, 'public/uploads/');
+ },
+ filename: (req, file, cb) => {
+ const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+ cb(null, uniqueSuffix + path.extname(file.originalname));
+ }
+});
+const upload = multer({
+ storage: storage,
+ fileFilter: (req, file, cb) => {
+ const filetypes = /jpeg|jpg|png/;
+ const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+ const mimetype = filetypes.test(file.mimetype);
+ if (extname && mimetype) {
+ return cb(null, true);
+ } else {
+ cb(new Error('Apenas imagens JPG ou PNG são permitidas!'));
+ }
+ }
+});
 
 app.use((req, res, next) => {
   res.locals.currentUrl = req.url;

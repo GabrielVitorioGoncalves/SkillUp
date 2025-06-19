@@ -106,6 +106,16 @@ async function buscarAdminPorId(id) {
 }
 
 
+/**
+ * Funções para Cursos
+ */
+
+async function cadastrarCurso(titulo, descricao, categoria, capa) {
+  const conexao = await conectarBD();
+  const sql = 'INSERT INTO cursos (cur_titulo, cur_descricao, cur_categoria, capa) VALUES (?, ?, ?, ?)';
+  await conexao.query(sql, [titulo, descricao, categoria, capa]);
+}
+
 
 /**
  * Funções para usar futuramente
@@ -168,6 +178,8 @@ async function admBuscarCategoria(nome) {
 
 
 
+
+
 module.exports = {
     conectarBD, buscarUsuario, 
     buscarAdmin, verificarUsuarioExistente, 
@@ -176,5 +188,6 @@ module.exports = {
     cadastrarAdmin, admExcluirCategoria, 
     admAtualizarCategoria,admBuscarCategoriaPorCodigo,
     admInserirCategoria,admBuscarCategoria, 
-    admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId
+    admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId,
+    cadastrarCurso
 }

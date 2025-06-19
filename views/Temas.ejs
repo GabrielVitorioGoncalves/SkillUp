@@ -1,96 +1,111 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill UP - Criar Curso</title>
   <link rel="stylesheet" href="../../stylesheets/temas.css">
-  <link rel='stylesheet' href="../../stylesheets/sidebarAdmin.css">
+  <link rel="stylesheet" href="../../stylesheets/sidebarAdmin.css">
 </head>
+
 <body>
   <div class="container">
-  
+
     <%- include('./partials/admin/sidebar') %>
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- INÍCIO DO FORMULÁRIO -->
-      <form class="course-form" action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
 
-        <!-- Upload da capa -->
-        <div class="upload-cover">
-         <label for="cover-upload" class="upload-box">
-          <input type="file" id="cover-upload" name="capa" hidden />
-          <div class="upload-icon">⬆</div>
-          <p id="upload-text">Upload capa do curso</p>
-          <img id="preview" src="" alt="Prévia da capa" style="display: none; max-height: 150px; margin-top: 10px;" />
-        </label>
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- INÍCIO DO FORMULÁRIO -->
+        <form class="course-form" action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
 
-        </div>
-
-        <!-- Inputs principais -->
-        <div class="form-grid">
-          <input type="text" name="nome" placeholder="Nome do Curso" required />
-          <textarea name="descricao" placeholder="Descrição do Curso" required></textarea>
-          <select name="categoria" required>
-            <option value="">Categoria do Curso</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Python">Python</option>
-            <option value="HTML/CSS">HTML/CSS</option>
-            <!-- adicione outras opções conforme necessário -->
-          </select>
-        </div>
-
-        <!-- Lições (aqui apenas exibido visualmente, o envio ainda não está implementado) -->
-        <div class="lessons">
-          <div class="lesson-card">
-            <p>Nome da Lição 1</p>
-            <label class="upload-btn">
-              <input type="file" name="video1" hidden />
-              Upload vídeo
+          <!-- Upload da capa -->
+          <div class="upload-cover">
+            <label for="cover-upload" class="upload-box">
+              <input type="file" id="cover-upload" name="capa" accept="image/*" hidden />
+              <div class="upload-icon">⬆</div>
+              <p id="upload-text">Upload capa do curso</p>
+              <img id="preview" src="" alt="Prévia da capa"
+                style="display: none; max-height: 150px; margin-top: 10px;" />
             </label>
           </div>
-          <div class="lesson-card">
-            <p>Nome da Lição 2</p>
-            <label class="upload-btn">
-              <input type="file" name="video2" hidden />
-              Upload vídeo
-            </label>
-          </div>
-          <div class="lesson-card">
-            <p>Nome da Lição 3</p>
-            <label class="upload-btn">
-              <input type="file" name="video3" hidden />
-              Upload vídeo
-            </label>
-          </div>
-          <div class="lesson-card add-lesson">
-            <p>+ Adicionar Lição</p>
-          </div>
-        </div>
 
-        <!-- Botão -->
-        <div class="btn-wrapper">
-          <button type="submit">Criar Curso</button>
-        </div>
-      </form>
-      <!-- FIM DO FORMULÁRIO -->
-    </main>
+          <!-- Inputs principais -->
+          <div class="form-grid">
+            <input type="text" name="nome" placeholder="Nome do Curso" required />
+            <textarea name="descricao" placeholder="Descrição do Curso" required></textarea>
+            <select name="categoria" required>
+              <option value="">Categoria do Curso</option>
+              <% if (categorias && categorias.length) { %>
+                <% categorias.forEach(c => { %>
+                  <option value="<%= c.cat_nome %>"><%= c.cat_nome %></option>
+                <% }); %>
+              <% } else { %>
+                <option disabled>Nenhuma categoria encontrada</option>
+              <% } %>
+            </select>
+            
+            
+          </div>
+
+          <!-- Lições -->
+          <div class="lessons">
+            <div class="lesson-card">
+              <p>Nome da Lição 1</p>
+              <label class="upload-btn">
+                <input type="file" name="video1" hidden />
+                Upload vídeo
+              </label>
+            </div>
+            <div class="lesson-card">
+              <p>Nome da Lição 2</p>
+              <label class="upload-btn">
+                <input type="file" name="video2" hidden />
+                Upload vídeo
+              </label>
+            </div>
+            <div class="lesson-card">
+              <p>Nome da Lição 3</p>
+              <label class="upload-btn">
+                <input type="file" name="video3" hidden />
+                Upload vídeo
+              </label>
+            </div>
+            <div class="lesson-card add-lesson">
+              <p>+ Adicionar Lição</p>
+            </div>
+          </div>
+
+          <!-- Botão -->
+          <div class="btn-wrapper">
+            <button type="submit">Criar Curso</button>
+          </div>
+        </form>
+        <!-- FIM DO FORMULÁRIO -->
+      </main>
   </div>
 
+  <!-- Preview da imagem da capa -->
   <script>
-  const input = document.getElementById('cover-upload');
-  const text = document.getElementById('upload-text');
-  const preview = document.getElementById('preview');
+    const input = document.getElementById('cover-upload');
+    const text = document.getElementById('upload-text');
+    const preview = document.getElementById('preview');
 
-  input.addEventListener('change', function () {
-    if (input.files && input.files[0]) {
-      const fileName = input.files[0].name;
-      text.textContent = `Selecionado: ${fileName}`;
+    input.addEventListener('change', function () {
+      if (input.files && input.files[0]) {
+        const fileName = input.files[0].name;
+        text.textContent = `Selecionado: ${fileName}`;
 
-      reader.readAsDataURL(input.files[0]);
-    }
-  });
-</script>
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+  </script>
 
 </body>
+
 </html>

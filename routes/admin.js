@@ -296,6 +296,19 @@ router.post('/cadastroAdmAtualizada/:id', async function (req, res) {
 
 
 /* ----- Cursos: Criação ----- */
+
+// Rota para mostrar o formulário de criação de curso com categorias
+router.get('/cria-curso', async function(req, res) {
+  try {
+    const categorias = await global.banco.admBuscarCategorias();
+    res.render('admin/temas', { categorias });
+  } catch (err) {
+    console.error(err);
+    res.render('admin/temas', { categorias: [] });
+  }
+});
+
+// Rota para processar a criação do curso
 router.post('/cria-curso', upload.single('capa'), async function (req, res) {
   const { nome, descricao, categoria } = req.body;
   const capa = req.file ? '/uploads/capas/' + req.file.filename : null;
@@ -306,14 +319,13 @@ router.post('/cria-curso', upload.single('capa'), async function (req, res) {
       'INSERT INTO cursos (cur_titulo, cur_descricao, cur_categoria, capa) VALUES (?, ?, ?, ?)',
       [nome, descricao, categoria, capa]
     );
-    res.redirect('/admin/Temas');
+    res.redirect('/admin/temas');  // Corrigido aqui
   } catch (erro) {
     console.error('Erro ao inserir curso:', erro);
     res.status(500).send('Erro ao criar curso.');
-  } finally {
-    conexao.end();
   }
 });
+
 
 /* ----- Temas: Página Inicial (placeholder) ----- */
 router.get('/Temas', async function (req, res) {
