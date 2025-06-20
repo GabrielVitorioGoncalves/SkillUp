@@ -34,7 +34,21 @@
     <div class="course-scrollable">
 
         <!-- Repita este bloco para cada curso -->
-<div class="course-grid" id="courseGrid"></div>
+<div class="course-grid">
+  <% if (cursos && cursos.length > 0) { %>
+    <% cursos.forEach(curso => { %>
+      <div class="course-card">
+        <img src="<%= curso.capa ? curso.capa : 'https://via.placeholder.com/150' %>" alt="<%= curso.cur_titulo %>">
+        <h5><%= curso.cur_titulo.toUpperCase() %></h5>
+        <p><%= curso.cur_descricao %></p>
+        <span><%= curso.cur_categoria %></span>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>Nenhum curso encontrado.</p>
+  <% } %>
+</div>
+
 
 <script>
   const cursos = [
@@ -57,7 +71,6 @@
     });
   }
 </script>
-
 
 
         

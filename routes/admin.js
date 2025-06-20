@@ -44,10 +44,21 @@ router.post('/loginadmin', async function (req, res) {
   }
 });
 
+/* ----- Cursos: Listagem ----- */
 router.get('/principalAdm', async function (req, res) {
-  verificarLogin(res);
-  res.render('admin/principalAdm');
+  try {
+    verificarLogin(res);
+
+    const conexao = await global.banco.conectarBD();
+    const [cursos] = await conexao.query('SELECT * FROM cursos');
+
+    res.render('admin/principalAdm', { cursos });
+  } catch (erro) {
+    console.error('Erro ao buscar cursos:', erro);
+    res.render('admin/principalAdm', { cursos: [] });
+  }
 });
+
 
 /* ----- Categorias: CRUD ----- */
 router.get('/categorias', async function (req, res) {
