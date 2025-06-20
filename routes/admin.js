@@ -328,8 +328,14 @@ router.post('/cria-curso', upload.single('capa'), async function (req, res) {
 
 
 /* ----- Temas: Página Inicial (placeholder) ----- */
-router.get('/Temas', async function (req, res) {
-  res.render('temas', { title: 'Temas' });
+router.get('/temas', async function (req, res) {
+  try {
+    const categorias = await global.banco.admBuscarCategorias();
+    res.render('Temas', { categorias }); // ou 'temas', dependendo da localização real da view
+  } catch (err) {
+    console.error('Erro ao carregar categorias:', err);
+    res.render('Temas', { categorias: [] });
+  }
 });
 
 module.exports = router;
