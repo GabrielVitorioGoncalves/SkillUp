@@ -34,7 +34,7 @@
     <div class="course-scrollable">
 
         <!-- Repita este bloco para cada curso -->
-<div class="course-grid">
+<div class="course-grid" id="courseGrid">
   <% if (cursos && cursos.length > 0) { %>
     <% cursos.forEach(curso => { %>
       <div class="course-card">
@@ -51,10 +51,7 @@
 
 
 <script>
-  const cursos = [
-    { titulo: 'JavaScript', descricao: 'NOME DO CURSO COMPLETO', professor: 'Nome do professor', img: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png' },
-    { titulo: 'Python', descricao: 'Curso de Python', professor: 'Prof. Python', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg' }
-  ];
+
 
   const courseGrid = document.getElementById('courseGrid');
   for(let i=0; i<10; i++) {

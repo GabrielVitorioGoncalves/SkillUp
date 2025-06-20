@@ -25,8 +25,7 @@
               <input type="file" id="cover-upload" name="capa" accept="image/*" hidden />
               <div class="upload-icon">⬆</div>
               <p id="upload-text">Upload capa do curso</p>
-              <img id="preview" src="" alt="Prévia da capa"
-                style="display: none; max-height: 150px; margin-top: 10px;" />
+              <img id="preview" />
             </label>
           </div>
 
@@ -86,25 +85,26 @@
   </div>
 
   <!-- Preview da imagem da capa -->
-  <script>
-    const input = document.getElementById('cover-upload');
-    const text = document.getElementById('upload-text');
-    const preview = document.getElementById('preview');
+<script>
+  const input = document.getElementById('cover-upload');
+  const text = document.getElementById('upload-text');
+  const icon = document.querySelector('.upload-icon');
+  const preview = document.getElementById('preview');
 
-    input.addEventListener('change', function () {
-      if (input.files && input.files[0]) {
-        const fileName = input.files[0].name;
-        text.textContent = `Selecionado: ${fileName}`;
+  input.addEventListener('change', function () {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        text.style.display = 'none';
+        icon.style.display = 'none';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  });
+</script>
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    });
-  </script>
 
 </body>
 
