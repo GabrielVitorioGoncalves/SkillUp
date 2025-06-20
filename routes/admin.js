@@ -19,6 +19,12 @@ const armazena = multer.diskStorage({
 });
 const upload = multer({ storage: armazena });
 
+const uploadCurso = upload.fields([
+  { name: 'capa', maxCount: 1 },
+  { name: 'videos[]', maxCount: 20 }
+]);
+
+
 /* ----- Função de Verificação de Login ----- */
 function verificarLogin(res) {
   if (!global.adm_email || global.adm_email == "") {
@@ -308,6 +314,8 @@ router.post('/cadastroAdmAtualizada/:id', async function (req, res) {
 
 /* ----- Cursos: Criação ----- */
 
+
+
 // Rota para mostrar o formulário de criação de curso com categorias
 router.get('/cria-curso', async function(req, res) {
   try {
@@ -320,22 +328,54 @@ router.get('/cria-curso', async function(req, res) {
 });
 
 // Rota para processar a criação do curso
-router.post('/cria-curso', upload.single('capa'), async function (req, res) {
-  const { nome, descricao, categoria } = req.body;
-  const capa = req.file ? '/uploads/capas/' + req.file.filename : null;
+router.post('/cria-curso', uploadCurso, async function (req, res) {
+  const { nome, descricao, categoria, titulos } = req.body;
 
-  const conexao = await global.banco.conectarBD();
+  const capaFile = req.files?.capa?.[0];
+  const capa = capaFile ? '/uploads/capas/' + capaFile.filename : null;
+
   try {
-    await conexao.query(
+    const conexao = await global.banco.conectarBD();
+
+    // 1. Inserir o curso
+    const [cursoResult] = await conexao.query(
       'INSERT INTO cursos (cur_titulo, cur_descricao, cur_categoria, capa) VALUES (?, ?, ?, ?)',
       [nome, descricao, categoria, capa]
     );
-    res.redirect('/admin/temas');  // Corrigido aqui
+    const cursoId = cursoResult.insertId;
+
+    // 2. Inserir vídeos e associar
+    const arquivosVideos = req.files?.videos || [];
+
+    // titulos pode vir como string se só tiver 1. Normalizamos para array.
+    const titulosArray = Array.isArray(titulos) ? titulos : [titulos];
+
+    for (let i = 0; i < arquivosVideos.length; i++) {
+      const video = arquivosVideos[i];
+      const nomeArquivo = video.filename;
+      const titulo = titulosArray[i] || `Lição ${i + 1}`;
+
+      // Inserir na tabela `video`
+      const [videoResult] = await conexao.query(
+        'INSERT INTO videos (vid_titulo, vid_miniatura, vid_bloqueado) VALUES (?, ?, ?)',
+        [titulo, nomeArquivo, 0]
+      );
+      const videoId = videoResult.insertId;
+
+      // Relacionar com o curso (ordem baseada no índice)
+      await conexao.query(
+        'INSERT INTO curso_video (id_curso, id_video, ordem) VALUES (?, ?, ?)',
+        [cursoId, videoId, i + 1]
+      );
+    }
+
+    res.redirect('/admin/principalAdm');
   } catch (erro) {
-    console.error('Erro ao inserir curso:', erro);
-    res.status(500).send('Erro ao criar curso.');
+    console.error('Erro ao criar curso com vídeos:', erro);
+    res.status(500).send('Erro ao criar curso com vídeos.');
   }
 });
+
 
 
 /* ----- Temas: Página Inicial (placeholder) ----- */

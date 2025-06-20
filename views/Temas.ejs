@@ -4,108 +4,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill UP - Criar Curso</title>
-  <link rel="stylesheet" href="../../stylesheets/temas.css">
+    <link rel="stylesheet" href="../../stylesheets/temas.css">
+  <link rel="stylesheet" href="../../stylesheets/footer.css">
   <link rel="stylesheet" href="../../stylesheets/sidebarAdmin.css">
+  <title>Skill UP - Criar Curso</title>
 </head>
 
 <body>
   <div class="container">
 
+    <!-- sidebar inclusa via template engine (EJS) -->
     <%- include('./partials/admin/sidebar') %>
 
-      <!-- Main Content -->
-      <main class="main-content">
-        <!-- INÍCIO DO FORMULÁRIO -->
-        <form class="course-form" action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- INÍCIO DO FORMULÁRIO -->
+      <form class="course-form" action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
 
-          <!-- Upload da capa -->
-          <div class="upload-cover">
-            <label for="cover-upload" class="upload-box">
-              <input type="file" id="cover-upload" name="capa" accept="image/*" hidden />
-              <div class="upload-icon">⬆</div>
-              <p id="upload-text">Upload capa do curso</p>
-              <img id="preview" />
-            </label>
-          </div>
+        <!-- Upload da capa -->
+        <div class="upload-cover">
+          <label for="cover-upload" class="upload-box">
+            <input type="file" id="cover-upload" name="capa" accept="image/*" hidden />
+            <div class="upload-icon">⬆</div>
+            <p id="upload-text">Upload capa do curso</p>
+            <img id="preview" />
+          </label>
+        </div>
 
-          <!-- Inputs principais -->
-          <div class="form-grid">
-            <input type="text" name="nome" placeholder="Nome do Curso" required />
-            <textarea name="descricao" placeholder="Descrição do Curso" required></textarea>
-            <select name="categoria" required>
-              <option value="">Categoria do Curso</option>
-              <% if (categorias && categorias.length) { %>
-                <% categorias.forEach(c => { %>
-                  <option value="<%= c.cat_nome %>"><%= c.cat_nome %></option>
-                <% }); %>
-              <% } else { %>
-                <option disabled>Nenhuma categoria encontrada</option>
-              <% } %>
-            </select>
-            
-            
-          </div>
+        <!-- Inputs principais -->
+        <div class="form-grid">
+          <input type="text" name="nome" placeholder="Nome do Curso" required />
+          <textarea name="descricao" placeholder="Descrição do Curso" required></textarea>
+          <select name="categoria" required>
+            <option value="">Categoria do Curso</option>
+            <% if (categorias && categorias.length) { %>
+            <% categorias.forEach(c => { %>
+            <option value="<%= c.cat_nome %>"><%= c.cat_nome %></option>
+            <% }); %>
+            <% } else { %>
+            <option disabled>Nenhuma categoria encontrada</option>
+            <% } %>
+          </select>
+        </div>
 
-          <!-- Lições -->
-          <div class="lessons">
-            <div class="lesson-card">
-              <p>Nome da Lição 1</p>
-              <label class="upload-btn">
-                <input type="file" name="video1" hidden />
-                Upload vídeo
-              </label>
-            </div>
-            <div class="lesson-card">
-              <p>Nome da Lição 2</p>
-              <label class="upload-btn">
-                <input type="file" name="video2" hidden />
-                Upload vídeo
-              </label>
-            </div>
-            <div class="lesson-card">
-              <p>Nome da Lição 3</p>
-              <label class="upload-btn">
-                <input type="file" name="video3" hidden />
-                Upload vídeo
-              </label>
-            </div>
-            <div class="lesson-card add-lesson">
-              <p>+ Adicionar Lição</p>
-            </div>
+        <!-- Lições -->
+        <div class="lessons" id="lesson-container">
+          <div class="lesson-card">
+            <p class="lesson-title">Lição 1</p>
+            <input type="text" name="titulos[]" placeholder="Nome da Lição" required />
+            <input class="addVideo" type="file" name="videos[]" required />
+            <span class="video-name"></span>
+            <button type="button" class="delete-btn" onclick="removerCard(this)">✖</button>
           </div>
+        </div>
 
-          <!-- Botão -->
-          <div class="btn-wrapper">
-            <button type="submit">Criar Curso</button>
-          </div>
-        </form>
-        <!-- FIM DO FORMULÁRIO -->
-      </main>
+        <div class="lesson-card add-lesson" id="add-lesson-btn">
+          <p>+ Adicionar Lição</p>
+        </div>
+
+        <!-- Botão -->
+        <div class="btn-wrapper">
+          <button type="submit">Criar Curso</button>
+        </div>
+      </form>
+      <!-- FIM DO FORMULÁRIO -->
+    </main>
   </div>
 
-  <!-- Preview da imagem da capa -->
-<script>
-  const input = document.getElementById('cover-upload');
-  const text = document.getElementById('upload-text');
-  const icon = document.querySelector('.upload-icon');
-  const preview = document.getElementById('preview');
+  <script>
+    // Preview imagem capa
+    const input = document.getElementById('cover-upload');
+    const text = document.getElementById('upload-text');
+    const icon = document.querySelector('.upload-icon');
+    const preview = document.getElementById('preview');
 
-  input.addEventListener('change', function () {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-        text.style.display = 'none';
-        icon.style.display = 'none';
-      };
-      reader.readAsDataURL(input.files[0]);
+    input.addEventListener('change', function () {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          text.style.display = 'none';
+          icon.style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+
+    // Lições
+    let lessonCount = 1;
+
+    document.getElementById('add-lesson-btn').addEventListener('click', () => {
+      lessonCount++;
+      const container = document.getElementById('lesson-container');
+
+      const newCard = document.createElement('div');
+      newCard.className = 'lesson-card';
+      newCard.innerHTML = `
+        <p class="lesson-title">Lição ${lessonCount}</p>
+        <input type="text" name="titulos[]" placeholder="Nome da Lição" required />
+        <input class="addVideo" type="file" name="videos[]" required />
+        <span class="video-name"></span>
+        <button type="button" class="delete-btn" onclick="removerCard(this)">✖</button>
+      `;
+      container.appendChild(newCard);
+    });
+
+    function removerCard(btn) {
+      const card = btn.closest('.lesson-card');
+      card.remove();
+      atualizarNumeracao();
     }
-  });
-</script>
 
+    function atualizarNumeracao() {
+      const cards = document.querySelectorAll('.lesson-card:not(.add-lesson)');
+      lessonCount = 0;
+      cards.forEach((card, index) => {
+        lessonCount++;
+        const titulo = card.querySelector('.lesson-title');
+        if (titulo) {
+          titulo.textContent = `Lição ${index + 1}`;
+        }
+      });
+    }
 
+    // Atualiza o nome do vídeo selecionado
+    document.addEventListener('change', function (e) {
+      if (e.target && e.target.matches('input.addVideo')) {
+        const fileInput = e.target;
+        const file = fileInput.files[0];
+        const nameDisplay = fileInput.parentElement.querySelector('.video-name') ||
+          fileInput.closest('.lesson-card')?.querySelector('.video-name');
+
+        if (file && nameDisplay) {
+          nameDisplay.textContent = `🎞️ ${file.name}`;
+        } else if (nameDisplay) {
+          nameDisplay.textContent = '';
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
