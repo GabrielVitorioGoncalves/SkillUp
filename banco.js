@@ -176,6 +176,37 @@ async function admBuscarCategoria(nome) {
     return categoria.length > 0;
 }
 
+/**
+ * Pagina Cursos
+ */
+async function buscarCategoriasDeCursos() {
+    const conex = await conectarBD();
+    const sql = "SELECT DISTINCT cur_categoria FROM cursos WHERE cur_categoria IS NOT NULL AND cur_categoria <> '' ORDER BY cur_categoria ASC;";
+    const [categorias] = await conex.query(sql);
+    return categorias;
+}
+
+async function buscarCursosMaisAvaliados() {
+    const conex = await conectarBD();
+    const sql = "SELECT * FROM cursos ORDER BY cur_nota DESC LIMIT 10"; // Usando a coluna cur_nota que já existe
+    const [cursos] = await conex.query(sql);
+    return cursos;
+}
+
+async function buscarTodosOsCursos() {
+    const conex = await conectarBD();
+    const sql = "SELECT * FROM cursos ORDER BY cur_titulo ASC";
+    const [cursos] = await conex.query(sql);
+    return cursos;
+}
+async function buscarCursosRecentes() {
+    const conex = await conectarBD();
+    const sql = "SELECT * FROM cursos ORDER BY id_curso DESC LIMIT 10"; // Usando a chave primária id_curso
+    const [cursos] = await conex.query(sql);
+    return cursos;
+}
+
+
 
 
 
@@ -189,5 +220,5 @@ module.exports = {
     admAtualizarCategoria,admBuscarCategoriaPorCodigo,
     admInserirCategoria,admBuscarCategoria, 
     admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId,
-    cadastrarCurso
+    cadastrarCurso, buscarCategoriasDeCursos, buscarCursosMaisAvaliados, buscarTodosOsCursos,buscarCursosRecentes
 }

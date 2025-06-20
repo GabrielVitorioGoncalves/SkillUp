@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,165 +16,149 @@
 <body>
   <%- include('partials/navbar') %>
 
-  <section class="profile-section">
-    <div class="avatar">F</div>
-    <div class="avatar-name">Seja bem-vindo(a), <%= userName %></div>
-  </section>
+    <section class="profile-section">
+      <div class="avatar">F</div>
+      <div class="avatar-name">Seja bem-vindo(a), <%= userName %>
+      </div>
+    </section>
 
-  <!-- Carrossel de Destaques -->
-  <section class="hero-carousel">
-    <div class="carousel-container">
-      <div class="carousel-slides">
-        <% const slides = [
-          { title: "Descubra o conhecimento", desc: "📚 Seu Curso de Mercado" },
-          { title: "Aprenda no seu ritmo", desc: "🎓 Cursos certificados" },
-          { title: "Desenvolva suas habilidades", desc: "💻 Projetos práticos" }
-        ]; %>
+    <!-- Carrossel de Destaques -->
+    <section class="hero-carousel">
+      <div class="carousel-container">
+        <div class="carousel-slides">
+          <% const slides=[ { title: "Descubra o conhecimento" , desc: "📚 Seu Curso de Mercado" }, {
+            title: "Aprenda no seu ritmo" , desc: "🎓 Cursos certificados" }, { title: "Desenvolva suas habilidades" ,
+            desc: "💻 Projetos práticos" } ]; %>
 
-        <% slides.forEach((slide) => { %>
-          <div class="carousel-slide">
-            <div class="hero-content">
-              <h2><%= slide.title %></h2>
-              <p><%= slide.desc %></p>
-            </div>
-            <div class="hero-image"></div>
+            <% slides.forEach((slide)=> { %>
+              <div class="carousel-slide">
+                <div class="hero-content">
+                  <h2>
+                    <%= slide.title %>
+                  </h2>
+                  <p>
+                    <%= slide.desc %>
+                  </p>
+                </div>
+                <div class="hero-image"></div>
+              </div>
+              <% }); %>
+        </div>
+
+        <div class="carousel-controls">
+          <button class="carousel-prev">❮</button>
+          <button class="carousel-next">❯</button>
+        </div>
+
+        <div class="carousel-indicators">
+          <% slides.forEach((_, index)=> { %>
+            <span class="indicator <%= index === 0 ? 'active' : '' %>" data-slide="<%= index %>"></span>
+            <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <% if (locals.secoesFixas && secoesFixas.length> 0) { %>
+      <% secoesFixas.forEach(secao=> { %>
+        <% if(secao.cursos && secao.cursos.length> 0) { %>
+          <h3 class="section-title">
+            <%= secao.titulo %>
+          </h3>
+          <div class="courses-row">
+            <% secao.cursos.forEach(curso=> { %>
+              <div class="course-card">
+                <div class="thumbnail-container">
+                  <div class="course-thumbnail">SK</div>
+                  <div class="video-icon">▶</div>
+                </div>
+                <div class="course-info">
+                  <div class="course-title">
+                    <%= curso.cur_titulo %>
+                  </div>
+                  <div class="course-author">SkillUp</div>
+                  <div class="course-rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="rating-count">
+                      <%= curso.cur_nota || 'N/A' %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <% }); %>
           </div>
-        <% }); %>
-      </div>
+          <% } %>
+            <% }); %>
+              <% } %>
 
-      <div class="carousel-controls">
-        <button class="carousel-prev">❮</button>
-        <button class="carousel-next">❯</button>
-      </div>
 
-      <div class="carousel-indicators">
-        <% slides.forEach((_, index) => { %>
-          <span class="indicator <%= index === 0 ? 'active' : '' %>" data-slide="<%= index %>"></span>
-        <% }); %>
-      </div>
-    </div>
-  </section>
+                <% if (locals.categoriasDinamicas && locals.todosOsCursos) { %>
+                  <% categoriasDinamicas.forEach(categoria=> { %>
+                    <h3 class="section-title">
+                      <%= categoria.cur_categoria %>
+                    </h3>
+                    <div class="courses-row">
+                      <% todosOsCursos.forEach(curso=> { %>
+                        <% if (curso.cur_categoria===categoria.cur_categoria) { %>
+                          <div class="course-card">
+                            <div class="thumbnail-container">
+                              <div class="course-thumbnail">SK</div>
+                              <div class="video-icon">▶</div>
+                            </div>
+                            <div class="course-info">
+                              <div class="course-title">
+                                <%= curso.cur_titulo %>
+                              </div>
+                              <div class="course-author">SkillUp</div>
+                              <div class="course-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-count">
+                                  <%= curso.cur_nota || 'N/A' %>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                            <% }); %>
+                    </div>
+                    <% }); %>
+                      <% } %>
 
-  <h3 class="section-title">Continue aprendendo</h3>
-<div class="continue-learning-row">
-  <div class="continue-card">
-    <div class="continue-thumbnail">
-      <img src="https://picsum.photos/300/200" alt="Imagem aleatória">
-      <div class="play-icon">▶</div>
-    </div>
-    <div class="continue-info">
-      <p class="course-subtitle">Cursos com as melhores ava...</p>
-      <h4 class="course-title-continue">Cursos com as melhores avaliações</h4>
-      <p class="course-meta">Aula <span>22 min restantes</span></p>
-    </div>
-  </div>
+                        <%- include('partials/footer') %>
 
-  <div class="continue-card">
-    <div class="continue-thumbnail">
-      <img src="https://picsum.photos/id/1025/300/200" alt="Imagem com ID">
-      <div class="play-icon">▶</div>
-    </div>
-    <div class="continue-info">
-      <p class="course-subtitle">Cursos com as melhores ...</p>
-      <h4 class="course-title-continue">Cursos com as melhores avaliações</h4>
-      <p class="course-meta">Aula <span>17 min restantes</span></p>
-    </div>
-  </div>
-</div>
+                          <!-- Script do Carrossel -->
+                          <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                              const slidesContainer = document.querySelector('.carousel-slides');
+                              const prev = document.querySelector('.carousel-prev');
+                              const next = document.querySelector('.carousel-next');
+                              const indicators = document.querySelectorAll('.indicator');
 
-  <!-- Seções de Cursos -->
-  <% const courseSections = [
-      "O que aprender em seguida",
-      "Cursos mais vistos",
-      "Cursos Lançados recentemente"
-  ]; %>
+                              let current = 0;
+                              const total = document.querySelectorAll('.carousel-slide').length;
 
-  <% courseSections.forEach(section => { %>
-    <h3 class="section-title"><%= section %></h3>
-    <div class="courses-row">
-      <div class="course-card">
-        <div class="thumbnail-container">
-          <div class="course-thumbnail">JS</div>
-          <div class="video-icon">▶</div>
-        </div>
-        <div class="course-info">
-          <div class="course-title">Título</div>
-          <div class="course-author">Autor</div>
-          <div class="course-rating">
-            <span class="stars">★★★★☆</span>
-            <span class="rating-count">4</span>
-          </div>
-        </div>
-      </div>
-      
+                              function show(index) {
+                                const offset = -index * 100;
+                                slidesContainer.style.transform = `translateX(${offset}%)`;
 
-      <div class="course-card">
-        <div class="thumbnail-container">
-          <div class="course-thumbnail">JS</div>
-          <div class="video-icon">▶</div>
-        </div>
-        <div class="course-info">
-          <div class="course-title">Título</div>
-          <div class="course-author">Autor</div>
-          <div class="course-rating">
-            <span class="stars">★★★★☆</span>
-            <span class="rating-count">4</span>
-          </div>
-        </div>
-      </div>
+                                indicators.forEach(i => i.classList.remove('active'));
+                                indicators[index].classList.add('active');
 
-      <div class="course-card">
-        <div class="thumbnail-container">
-          <div class="course-thumbnail">JS</div>
-          <div class="video-icon">▶</div>
-        </div>
-        <div class="course-info">
-          <div class="course-title">Título</div>
-          <div class="course-author">Autor</div>
-          <div class="course-rating">
-            <span class="stars">★★★★☆</span>
-            <span class="rating-count">4</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% }); %>
+                                current = index;
+                              }
 
-  <%- include('partials/footer') %>
+                              prev.onclick = () => show((current - 1 + total) % total);
+                              next.onclick = () => show((current + 1) % total);
+                              indicators.forEach((el, i) => el.onclick = () => show(i));
 
-  <!-- Script do Carrossel -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const slidesContainer = document.querySelector('.carousel-slides');
-      const prev = document.querySelector('.carousel-prev');
-      const next = document.querySelector('.carousel-next');
-      const indicators = document.querySelectorAll('.indicator');
+                              let interval = setInterval(() => show((current + 1) % total), 5000);
 
-      let current = 0;
-      const total = document.querySelectorAll('.carousel-slide').length;
-
-      function show(index) {
-        const offset = -index * 100;
-        slidesContainer.style.transform = `translateX(${offset}%)`;
-
-        indicators.forEach(i => i.classList.remove('active'));
-        indicators[index].classList.add('active');
-
-        current = index;
-      }
-
-      prev.onclick = () => show((current - 1 + total) % total);
-      next.onclick = () => show((current + 1) % total);
-      indicators.forEach((el, i) => el.onclick = () => show(i));
-
-      let interval = setInterval(() => show((current + 1) % total), 5000);
-
-      const container = document.querySelector('.carousel-container');
-      container.addEventListener('mouseenter', () => clearInterval(interval));
-      container.addEventListener('mouseleave', () => {
-        interval = setInterval(() => show((current + 1) % total), 5000);
-      });
-    });
-  </script>
+                              const container = document.querySelector('.carousel-container');
+                              container.addEventListener('mouseenter', () => clearInterval(interval));
+                              container.addEventListener('mouseleave', () => {
+                                interval = setInterval(() => show((current + 1) % total), 5000);
+                              });
+                            });
+                          </script>
 </body>
+
 </html>
