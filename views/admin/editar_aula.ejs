@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editando Aula - SkillUP</title>
+    <link rel='stylesheet' href='/stylesheets/sidebarAdmin.css'>
+    <link rel='stylesheet' href='/stylesheets/editar_curso.css'> </head>
+<body>
+    <div class="page-wrapper">
+        <%- include('../partials/admin/sidebar') %>
+
+        <main class="main-content">
+            <div class="edit-container">
+                <div class="edit-card">
+                    <h1 class="card-title">Editando Aula</h1>
+                    <p class="card-subtitle">"<%= video.vid_titulo %>"</p>
+
+                    <form action="/admin/editar-aula/<%= video.id_video %>" method="POST" enctype="multipart/form-data">
+
+                        <input type="hidden" name="idCurso" value="<%= video.id_curso %>">
+
+                        <div class="form-group">
+                            <label for="titulo">Novo Título da Aula</label>
+                            <input type="text" id="titulo" name="titulo" value="<%= video.vid_titulo %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="video">Substituir Arquivo de Vídeo (Opcional)</label>
+                            <input type="file" id="video" name="video" accept="video/mp4">
+                            <% if (video.caminho_do_arquivo) { %>
+                                <p style="color: #a0a0a0; font-size: 0.9em; margin-top: 10px;">
+                                    Arquivo atual: <%= video.caminho_do_arquivo %>
+                                </p>
+                            <% } %>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="/admin/editar-curso/<%= video.id_curso %>" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

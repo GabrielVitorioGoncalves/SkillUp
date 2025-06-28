@@ -6,6 +6,7 @@ const multer = require('multer');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan')
+const fs = require('fs');
 
 
 var indexRouter = require('./routes/index');
@@ -47,6 +48,8 @@ const upload = multer({
  }
  }
 });
+
+
 
 app.use((req, res, next) => {
   res.locals.currentUrl = req.url;

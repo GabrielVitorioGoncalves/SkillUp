@@ -1,22 +1,30 @@
 var express = require('express');
 var router = express.Router();
 
-// ----- Pacotes e Configuração Inicial -----
+
 const multer = require('multer');
 const path = require('path');
 const banco = require('../banco');
 
-// Configuração do Multer (upload de imagens)
+
 const armazena = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../public/uploads/capas'));
+    if (file.fieldname === 'capa') {
+      cb(null, path.join(__dirname, '../public/uploads/capas'));
+    }
+    else if (file.fieldname === 'video' || file.fieldname === 'videos[]') {
+      cb(null, path.join(__dirname, '../public/uploads/videos'));
+    }
+    else {
+      cb(new Error('Campo de arquivo não esperado'));
+    }
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const nomeArquivo = Date.now() + '-' + file.originalname;
-    cb(null, nomeArquivo);
+    const nomeUnico = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
+    cb(null, nomeUnico);
   }
 });
+
 const upload = multer({ storage: armazena });
 
 const uploadCurso = upload.fields([
@@ -25,14 +33,12 @@ const uploadCurso = upload.fields([
 ]);
 
 
-/* ----- Função de Verificação de Login ----- */
 function verificarLogin(res) {
   if (!global.adm_email || global.adm_email == "") {
     res.redirect('/admin');
   }
 }
 
-/* ----- Admin: Tela Inicial e Login ----- */
 router.get('/', function (req, res) {
   res.render('admin/admin');
 });
@@ -317,7 +323,7 @@ router.post('/cadastroAdmAtualizada/:id', async function (req, res) {
 
 
 // Rota para mostrar o formulário de criação de curso com categorias
-router.get('/cria-curso', async function(req, res) {
+router.get('/cria-curso', async function (req, res) {
   try {
     const categorias = await global.banco.admBuscarCategorias();
     res.render('admin/temas', { categorias });
@@ -332,7 +338,7 @@ router.post('/cria-curso', uploadCurso, async function (req, res) {
   const { nome, descricao, categoria, titulos } = req.body;
 
   const capaFile = req.files?.capa?.[0];
-  const capa = capaFile ? '/uploads/capas/' + capaFile.filename : null;
+  const nomeArquivoCapa = capaFile ? capaFile.filename : null;
 
   try {
     const conexao = await global.banco.conectarBD();
@@ -340,25 +346,24 @@ router.post('/cria-curso', uploadCurso, async function (req, res) {
     // 1. Inserir o curso
     const [cursoResult] = await conexao.query(
       'INSERT INTO cursos (cur_titulo, cur_descricao, cur_categoria, capa) VALUES (?, ?, ?, ?)',
-      [nome, descricao, categoria, capa]
+      [nome, descricao, categoria, nomeArquivoCapa]
     );
     const cursoId = cursoResult.insertId;
 
     // 2. Inserir vídeos e associar
     const arquivosVideos = req.files?.videos || [];
-
     // titulos pode vir como string se só tiver 1. Normalizamos para array.
     const titulosArray = Array.isArray(titulos) ? titulos : [titulos];
 
     for (let i = 0; i < arquivosVideos.length; i++) {
       const video = arquivosVideos[i];
-      const nomeArquivo = video.filename;
+      const nomeArquivoVideo = video.filename;
       const titulo = titulosArray[i] || `Lição ${i + 1}`;
 
       // Inserir na tabela `video`
       const [videoResult] = await conexao.query(
-        'INSERT INTO videos (vid_titulo, vid_miniatura, vid_bloqueado) VALUES (?, ?, ?)',
-        [titulo, nomeArquivo, 0]
+        'insert into videos (vid_titulo, caminho_do_arquivo) VALUES (?, ?)',
+        [titulo, nomeArquivoVideo]
       );
       const videoId = videoResult.insertId;
 
@@ -376,16 +381,148 @@ router.post('/cria-curso', uploadCurso, async function (req, res) {
   }
 });
 
-
-
-/* ----- Temas: Página Inicial (placeholder) ----- */
 router.get('/temas', async function (req, res) {
   try {
     const categorias = await global.banco.admBuscarCategorias();
-    res.render('Temas', { categorias }); // ou 'temas', dependendo da localização real da view
+    res.render('Temas', { categorias });
   } catch (err) {
     console.error('Erro ao carregar categorias:', err);
     res.render('Temas', { categorias: [] });
+  }
+});
+
+router.get('/editar-curso/:id', async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const idDoCurso = req.params.id;
+
+    const [curso, categorias, videosDoCurso] = await Promise.all([
+      global.banco.buscarCursoPorId(idDoCurso),
+      global.banco.admBuscarCategorias(),
+      global.banco.buscarPlaylistDoCurso(idDoCurso)
+    ]);
+
+    if (!curso) {
+      return res.status(404).send('Curso não encontrado');
+    }
+
+    res.render('admin/editar_curso', { curso, categorias, videos: videosDoCurso });
+  } catch (error) {
+    console.error("Erro ao carregar página de edição:", error);
+    next(error);
+  }
+});
+
+router.post('/editar-curso/:id', upload.single('capa'), async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const { id } = req.params;
+    const { nome, descricao, categoria } = req.body;
+    const capaFile = req.file;
+
+    const cursoAtual = await global.banco.buscarCursoPorId(id);
+    let nomeArquivoCapa = cursoAtual.capa;
+
+    if (capaFile) {
+      nomeArquivoCapa = capaFile.filename;
+    }
+
+    await global.banco.atualizarCurso(id, nome, descricao, categoria, nomeArquivoCapa);
+
+    res.redirect('/admin/principalAdm');
+  } catch (error) {
+    console.error('Erro ao atualizar o curso:', error);
+    next(error); // Adicionei o next(error)
+  }
+});
+
+router.post('/excluir-video/:idVideo', async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const { idVideo } = req.params;
+    await global.banco.excluirVideo(idVideo);
+
+    res.redirect(`/admin/editar-curso/${req.body.idCurso}`);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/adicionar-aula/:idCurso', async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const { idCurso } = req.params;
+    const curso = await global.banco.buscarCursoPorId(idCurso);
+
+    if (!curso) {
+      return res.status(404).send('Curso não encontrado para adicionar aula.');
+    }
+
+    res.render('admin/adicionar_aula', { curso });
+
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/adicionar-aula/:idCurso', upload.single('video'), async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const { idCurso } = req.params;
+    const { titulo } = req.body;
+    const videoFile = req.file;
+
+    if (!videoFile) {
+      throw new Error("Nenhum arquivo de vídeo foi enviado.");
+    }
+
+    const nomeArquivoVideo = videoFile.filename;
+
+    await banco.adicionarVideoAoCurso(idCurso, titulo, nomeArquivoVideo);
+
+    res.redirect(`/admin/editar-curso/${idCurso}`);
+
+  } catch (error) {
+    console.error("Erro ao adicionar nova aula:", error);
+    next(error);
+  }
+});
+
+router.get('/editar-aula/:idVideo', async function (req, res, next) {
+  try {
+    verificarLogin(res);
+    const { idVideo } = req.params;
+    const video = await global.banco.buscarVideoComCursoId(idVideo);
+
+    if (!video) {
+      return res.status(404).send('Aula não encontrada.');
+    }
+    res.render('admin/editar_aula', { video });
+
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/editar-aula/:idVideo', upload.single('video'), async (req, res, next) => {
+  try {
+    verificarLogin(res);
+    const { idVideo } = req.params;
+    const { titulo, idCurso } = req.body; 
+    const novoVideoFile = req.file;
+
+    let nomeNovoArquivo = null;
+    if (novoVideoFile) {
+      nomeNovoArquivo = novoVideoFile.filename;
+    }
+
+    await global.banco.alterarVideo(idVideo, titulo, nomeNovoArquivo);
+
+    res.redirect(`/admin/editar-curso/${idCurso}`);
+
+  } catch (error) {
+    console.error("Erro ao alterar a aula:", error);
+    next(error);
   }
 });
 

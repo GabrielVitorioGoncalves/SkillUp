@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/paginaVideo.css">
+    <link rel="stylesheet" href="/stylesheets/nav.css">
+    <link rel="stylesheet" href="/stylesheets/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/stylesheets/paginaVideo.css">
+    <title>Assistindo: <%= videoAtual.vid_titulo %>
+    </title>
+</head>
+
+<body>
+    <%- include('partials/navbar') %>
+
+        <div class="video-container">
+            <main class="video-main">
+                <div class="video-player-wrapper">
+                    <video id="videoPlayer" data-video-id="<%= videoAtual.id_video %>" controls width="100%">
+
+                        <source src="/videos/<%= videoAtual.caminho_do_arquivo %>" type="video/mp4">
+
+                        Seu navegador não suporta a tag de vídeo.
+                    </video>
+                </div>
+
+                <div class="video-info-bar">
+                    <h1 class="video-title">Nome da videoaula</h1>
+                    <div class="video-actions">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="video-navigation">
+                            <button class="nav-button prev-video">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="nav-button next-video">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <aside class="video-playlist">
+
+                <% if (playlist && playlist.length> 0) { %>
+                    <% playlist.forEach((videoDaLista, index)=> { %>
+
+                        <%# Verifica se o vídeo da lista é o que está tocando para aplicar a classe 'current' %>
+                            <div
+                                class="playlist-item <%= videoDaLista.id_video == videoAtual.id_video ? 'current' : '' %>">
+
+                                <a href="/curso/<%= idCurso %>/video/<%= videoDaLista.id_video %>" class="item-link">
+                                    <div class="item-info">
+                                        <%# Usando 'index + 1' para numerar as lições %>
+                                            <span class="item-title">Lição <%= index + 1 %></span>
+                                            <i class="fas fa-play-circle item-play-icon"></i>
+                                    </div>
+                                    <p class="item-details">
+                                        <%= videoDaLista.vid_titulo %>
+                                    </p>
+                                </a>
+                            </div>
+
+                            <% }); %>
+                                <% } else { %>
+                                    <p>Nenhum vídeo encontrado para este curso.</p>
+                                    <% } %>
+
+            </aside>
+
+
+            <div class="item-toggle">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+        </div>
+
+        </aside>
+        </div>
+
+        <%- include('partials/footer') %>
+<script>
+    const videoPlayer = document.getElementById('videoPlayer');
+
+    // Adiciona um "ouvinte" que dispara quando o vídeo termina
+    videoPlayer.addEventListener('ended', () => {
+        const idVideo = videoPlayer.dataset.videoId;
+        
+        console.log(`Vídeo ${idVideo} concluído. Enviando para o servidor...`);
+
+        // Usamos a API 'fetch' para fazer a requisição POST para nossa rota
+        fetch('/api/progresso/marcar-visto', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idVideo: idVideo }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Servidor confirmou o progresso!');
+                // Aqui você pode mudar a cor do item na playlist para verde, por exemplo.
+            } else {
+                console.error('Falha ao salvar progresso:', data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Erro de rede:', error);
+        });
+    });
+</script>
+
+</body>
+</html>

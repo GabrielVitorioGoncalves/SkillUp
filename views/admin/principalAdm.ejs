@@ -32,16 +32,16 @@
 <section class="course-section">
   <div class="course-layout">
     <div class="course-scrollable">
-
-        <!-- Repita este bloco para cada curso -->
+      
 <div class="course-grid" id="courseGrid">
   <% if (cursos && cursos.length > 0) { %>
     <% cursos.forEach(curso => { %>
       <div class="course-card">
-        <img src="<%= curso.capa ? curso.capa : 'https://via.placeholder.com/150' %>" alt="<%= curso.cur_titulo %>">
+       <img src="<%= curso.capa ? '/uploads/capas/' + curso.capa : 'https://via.placeholder.com/150' %>" alt="<%= curso.cur_titulo %>">
         <h5><%= curso.cur_titulo.toUpperCase() %></h5>
         <p><%= curso.cur_descricao %></p>
         <span><%= curso.cur_categoria %></span>
+      <a href="/admin/editar-curso/<%= curso.id_curso %>" class="edit-button">Editar</a>
       </div>
     <% }) %>
   <% } else { %>
@@ -69,8 +69,6 @@
   }
 </script>
 
-
-        
         <!-- Outros cards aqui -->
     </div>
 

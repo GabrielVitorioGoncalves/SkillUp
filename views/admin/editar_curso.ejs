@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editando: <%= curso.cur_titulo %></title>
+    <link rel='stylesheet' href='/stylesheets/sidebarAdmin.css'>
+    <link rel='stylesheet' href='/stylesheets/editar_curso.css'> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <%- include('../partials/admin/sidebar') %>
+
+        <main class="main-content">
+            <div class="edit-container">
+                
+                <div class="edit-card">
+                    <h1 class="card-title">Editar Curso</h1>
+                    <p class="card-subtitle">Altere os dados principais do curso.</p>
+
+                    <form action="/admin/editar-curso/<%= curso.id_curso %>" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="nome">Nome do Curso</label>
+                            <input type="text" id="nome" name="nome" value="<%= curso.cur_titulo %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao" name="descricao" rows="5" required><%= curso.cur_descricao %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoria</label>
+                            <select id="categoria" name="categoria" required>
+                                <% categorias.forEach(cat => { %>
+                                    <option value="<%= cat.cat_nome %>" <%= curso.cur_categoria === cat.cat_nome ? 'selected' : '' %>>
+                                        <%= cat.cat_nome %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="capa">Trocar Capa (opcional)</label>
+                            <input type="file" id="capa" name="capa" accept="image/*">
+                            <% if (curso.capa) { %>
+                                <div class="image-preview">
+                                    <img src="/uploads/capas/<%= curso.capa %>" alt="Capa atual">
+                                    <span>Capa Atual</span>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Salvar Alterações do Curso</button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="edit-card">
+                    <h2 class="card-title">Gerenciar Aulas</h2>
+                    <p class="card-subtitle">Adicione, altere ou remova as aulas deste curso.</p>
+
+                    <ul class="lista-videos">
+                        <% if (videos && videos.length > 0) { %>
+                            <% videos.forEach(video => { %>
+                                <li class="video-item">
+                                    <i class="fas fa-film video-icon"></i>
+                                    <span class="video-item-title"><%= video.vid_titulo %></span>
+                                    <div class="video-item-actions">
+                                        <a href="/admin/editar-aula/<%= video.id_video %>" class="btn btn-secondary">Alterar</a>
+                                        <form action="/admin/excluir-video/<%= video.id_video %>" method="POST" onsubmit="return confirm('Tem certeza? Esta ação não pode ser desfeita.');">
+                                            <input type="hidden" name="idCurso" value="<%= curso.id_curso %>">
+                                            <button type="submit" class="btn btn-danger">Excluir</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="empty-list-message">Este curso ainda não possui aulas.</p>
+                        <% } %>
+                    </ul>
+                     <div class="form-actions">
+                    <a href="/admin/adicionar-aula/<%= curso.id_curso %>" class="btn btn-success">Adicionar Nova Aula</a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

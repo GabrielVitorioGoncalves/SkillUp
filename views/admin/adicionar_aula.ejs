@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Nova Aula - SkillUP</title>
+    <link rel='stylesheet' href='/stylesheets/sidebarAdmin.css'>
+    <link rel='stylesheet' href='/stylesheets/editar_curso.css'> </head>
+<body>
+    <div class="page-wrapper">
+        <%- include('../partials/admin/sidebar') %>
+
+        <main class="main-content">
+            <div class="edit-container">
+                <div class="edit-card">
+                    <h1 class="card-title">Adicionar Nova Aula</h1>
+                    <p class="card-subtitle">Para o curso: <strong><%= curso.cur_titulo %></strong></p>
+
+                    <form action="/admin/adicionar-aula/<%= curso.id_curso %>" method="POST" enctype="multipart/form-data">
+
+                        <div class="form-group">
+                            <label for="titulo">Título da Aula</label>
+                            <input type="text" id="titulo" name="titulo" placeholder="Ex: Introdução ao Módulo" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="video">Arquivo de Vídeo (.mp4)</label>
+                            <input type="file" id="video" name="video" accept="video/mp4" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="/admin/editar-curso/<%= curso.id_curso %>" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Salvar Aula</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

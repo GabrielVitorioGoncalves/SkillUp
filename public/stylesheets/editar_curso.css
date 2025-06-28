@@ -1,0 +1,170 @@
+/* Estilo para a página de edição de curso e aulas */
+
+.main-content {
+    padding: 2rem;
+    background-color: #1a1d21; /* Fundo principal escuro (CORRIGE O FUNDO BRANCO) */
+    width: 100%;
+    min-height: 100vh;
+}
+
+.edit-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; /* Espaço entre o card de edição do curso e o de aulas */
+}
+
+.edit-card {
+    background-color: #25282e;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #3a3f44;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #3a3f44;
+    padding-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: #d0d0d0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: #1a1d21;
+    border: 1px solid #4a4f54;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #0d6efd;
+}
+
+.image-preview {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #1a1d21;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.image-preview img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.image-preview span {
+    color: #a0a0a0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary { 
+    background-color: #0d6efd; color: white; 
+}
+.btn-secondary { 
+    background-color: #5c636a; color: white; padding: 0.4rem 0.8rem; font-size: 0.85rem; 
+}
+.btn-danger { 
+    background-color: #dc3545; color: white; padding: 0.4rem 0.8rem; font-size: 0.85rem; 
+}
+.btn-success { 
+    background-color: #198754; color: white; 
+}
+
+
+.lista-videos {
+    list-style: none;
+    padding: 0;
+}
+
+.video-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #3a3f44;
+}
+
+.video-item:last-child {
+    border-bottom: none;
+}
+
+.video-item .video-icon {
+    color: #a0a0a0;
+    margin-right: 1rem;
+}
+
+.video-item-title {
+    color: #e0e0e0;
+    flex-grow: 1; 
+}
+
+.video-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.empty-list-message {
+    color: #a0a0a0;
+    padding: 1rem;
+    text-align: center;
+    background-color: #1a1d21;
+    border-radius: 5px;
+}
