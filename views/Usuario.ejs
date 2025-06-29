@@ -57,7 +57,6 @@
         </div>
       </div>
     </section>
-
     <% if (locals.secoesFixas && secoesFixas.length> 0) { %>
       <% secoesFixas.forEach(secao=> { %>
         <% if(secao.cursos && secao.cursos.length> 0) { %>
@@ -66,25 +65,53 @@
           </h3>
           <div class="courses-row">
             <% secao.cursos.forEach(curso=> { %>
-             <a href="/curso/<%= curso.id_curso %>" class="course-card-link">
-               <div class="course-card">
-                <div class="thumbnail-container">
-                  <div class="course-thumbnail">SK</div>
-                  <div class="video-icon">▶</div>
-                </div>
-                <div class="course-info">
-                  <div class="course-title">
-                    <%= curso.cur_titulo %>
+              <a href="/curso/<%= curso.id_curso %>" class="course-card-link">
+                <div class="course-card">
+
+                  <div class="thumbnail-container">
+                    <% if (curso.capa && curso.capa.trim() !=='' ) { %>
+                      <img src="/uploads/capas/<%= curso.capa %>" alt="Capa do curso <%= curso.cur_titulo %>"
+                        class="course-thumbnail-img">
+                      <% } else { %>
+                        <div class="course-thumbnail">SK</div>
+                        <% } %>
+                          <div class="video-icon">▶</div>
                   </div>
-                  <div class="course-author">SkillUp</div>
-                  <div class="course-rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="rating-count">
-                      <%= curso.cur_nota || 'N/A' %>
-                    </span>
+                  <div class="course-info">
+                    <div class="course-title">
+                      <%= curso.cur_titulo %>
+                    </div>
+                    <div class="course-rating">
+                      <% const nota=curso.nota_media ? parseFloat(curso.nota_media) : 0; %>
+                        <% const notaInteira=Math.floor(nota); %>
+                          <% const temMeiaEstrela=(nota - notaInteira)>= 0.5; %>
+
+                            <% for(let i=0; i < notaInteira; i++) { %>
+                              <i class="fa-solid fa-star"></i>
+                              <% } %>
+
+                                <% if (temMeiaEstrela) { %>
+                                  <i class="fa-solid fa-star-half-alt"></i>
+                                  <% } %>
+
+                                    <% const estrelasRestantes=5 - notaInteira - (temMeiaEstrela ? 1 : 0); %>
+                                      <% for(let i=0; i < estrelasRestantes; i++) { %>
+                                        <i class="fa-regular fa-star"></i>
+                                        <% } %>
+
+                                          <span class="rating-count">
+                                            <%= nota> 0 ? nota.toFixed(1) : 'N/A' %>
+                                          </span>
+                    </div>
+
+                    <style>
+                      .course-rating .fa-star,
+                      .course-rating .fa-star-half-alt {
+                        color: #f5c518;
+                      }
+                    </style>
                   </div>
                 </div>
-              </div>
               </a>
               <% }); %>
           </div>
@@ -101,29 +128,33 @@
                     <div class="courses-row">
                       <% todosOsCursos.forEach(curso=> { %>
                         <% if (curso.cur_categoria===categoria.cur_categoria) { %>
-                          <div class="course-card">
-                            <div class="thumbnail-container">
-                              <% if (curso.capa) { %>
-                                <img src="/uploads/capas/<%= curso.capa %>" alt="Capa do curso <%= curso.cur_titulo %>"
-                                  class="course-thumbnail-img">
-                                <% } else { %>
-                                  <div class="course-thumbnail">SK</div>
-                                  <% } %>
-                                    <div class="video-icon">▶</div>
-                            </div>
-                            <div class="course-info">
-                              <div class="course-title">
-                                <%= curso.cur_titulo %>
+
+                          <a href="/curso/<%= curso.id_curso %>" class="course-card-link">
+                            <div class="course-card">
+                              <div class="thumbnail-container">
+                                <% if (curso.capa) { %>
+                                  <img src="/uploads/capas/<%= curso.capa %>" alt="Capa do curso"
+                                    class="course-thumbnail-img">
+                                  <% } else { %>
+                                    <div class="course-thumbnail">SK</div>
+                                    <% } %>
+                                      <div class="video-icon">▶</div>
                               </div>
-                              <div class="course-author">SkillUp</div>
-                              <div class="course-rating">
-                                <span class="stars">★★★★☆</span>
-                                <span class="rating-count">
-                                  <%= curso.cur_nota || 'N/A' %>
-                                </span>
+                              <div class="course-info">
+                                <div class="course-title">
+                                  <%= curso.cur_titulo %>
+                                </div>
+                                <div class="course-author">SkillUp</div>
+                                <div class="course-rating">
+                                  <span class="stars">★★★★☆</span>
+                                  <span class="rating-count">
+                                    <%= curso.cur_nota || 'N/A' %>
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          </a>
+
                           <% } %>
                             <% }); %>
                     </div>

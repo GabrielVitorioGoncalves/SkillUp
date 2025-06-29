@@ -2,148 +2,63 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../stylesheets/temas.css">
-  <link rel="stylesheet" href="../../stylesheets/footer.css">
-  <link rel="stylesheet" href="../../stylesheets/sidebarAdmin.css">
-  <title>Skill UP - Criar Curso</title>
-</head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skill UP - Criar Curso</title>
+
+    <link rel='stylesheet' href='/stylesheets/sidebarAdmin.css'>
+    <link rel='stylesheet' href='../../stylesheets/temas.css'> </head>
 
 <body>
-  <div class="container">
+    <div class="page-wrapper">
+        <%- include('partials/admin/sidebar') %>
 
-    <!-- sidebar inclusa via template engine (EJS) -->
-    <%- include('./partials/admin/sidebar') %>
+        <main class="main-content">
+            <div class="form-container">
+                <div class="form-card">
+                    <h1 class="form-title">Criar Novo Curso</h1>
+                    <p class="form-subtitle">Preencha os dados principais abaixo. Após salvar, você será redirecionado para adicionar as aulas.</p>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- INÍCIO DO FORMULÁRIO -->
-      <form class="course-form" action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/cria-curso" method="POST" enctype="multipart/form-data">
 
-        <!-- Upload da capa -->
-        <div class="upload-cover">
-          <label for="cover-upload" class="upload-box">
-            <input type="file" id="cover-upload" name="capa" accept="image/*" hidden />
-            <div class="upload-icon">⬆</div>
-            <p id="upload-text">Upload capa do curso</p>
-            <img id="preview" />
-          </label>
-        </div>
+                        <div class="form-group">
+                            <label for="nome">Nome do Curso</label>
+                            <input type="text" id="nome" name="nome" placeholder="Ex: Curso Completo de JavaScript" required>
+                        </div>
 
-        <!-- Inputs principais -->
-        <div class="form-grid">
-          <input type="text" name="nome" placeholder="Nome do Curso" required />
-          <textarea name="descricao" placeholder="Descrição do Curso" required></textarea>
-          <select name="categoria" required>
-            <option value="">Categoria do Curso</option>
-            <% if (categorias && categorias.length) { %>
-            <% categorias.forEach(c => { %>
-            <option value="<%= c.cat_nome %>"><%= c.cat_nome %></option>
-            <% }); %>
-            <% } else { %>
-            <option disabled>Nenhuma categoria encontrada</option>
-            <% } %>
-          </select>
-        </div>
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao" name="descricao" rows="5" placeholder="Descreva o que os alunos aprenderão neste curso..." required></textarea>
+                        </div>
 
-        <!-- Lições -->
-        <div class="lessons" id="lesson-container">
-          <div class="lesson-card">
-            <p class="lesson-title">Lição 1</p>
-            <input type="text" name="titulos[]" placeholder="Nome da Lição" required />
-            <input class="addVideo" type="file" name="videos[]" required />
-            <span class="video-name"></span>
-            <button type="button" class="delete-btn" onclick="removerCard(this)">✖</button>
-          </div>
-        </div>
+                        <div class="form-group">
+                            <label>Categorias (pode marcar várias)</label>
+                            <div class="checkbox-group">
+                                <% if (locals.categorias && categorias.length > 0) { %>
+                                    <% categorias.forEach(cat => { %>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" name="categorias" id="cat-<%= cat.id_tema %>" value="<%= cat.id_tema %>">
+                                            <label for="cat-<%= cat.id_tema %>"><%= cat.cat_nome %></label>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <p style="color: #a0a0a0;">Nenhuma categoria encontrada. Crie uma na seção 'Categorias' primeiro.</p>
+                                <% } %>
+                            </div>
+                        </div>
 
-        <div class="lesson-card add-lesson" id="add-lesson-btn">
-          <p>+ Adicionar Lição</p>
-        </div>
+                        <div class="form-group">
+                            <label for="capa">Capa do Curso (opcional)</label>
+                            <input type="file" id="capa" name="capa" accept="image/*">
+                        </div>
 
-        <!-- Botão -->
-        <div class="btn-wrapper">
-          <button type="submit">Criar Curso</button>
-        </div>
-      </form>
-      <!-- FIM DO FORMULÁRIO -->
-    </main>
-  </div>
-
-  <script>
-    // Preview imagem capa
-    const input = document.getElementById('cover-upload');
-    const text = document.getElementById('upload-text');
-    const icon = document.querySelector('.upload-icon');
-    const preview = document.getElementById('preview');
-
-    input.addEventListener('change', function () {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-          text.style.display = 'none';
-          icon.style.display = 'none';
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    });
-
-    // Lições
-    let lessonCount = 1;
-
-    document.getElementById('add-lesson-btn').addEventListener('click', () => {
-      lessonCount++;
-      const container = document.getElementById('lesson-container');
-
-      const newCard = document.createElement('div');
-      newCard.className = 'lesson-card';
-      newCard.innerHTML = `
-        <p class="lesson-title">Lição ${lessonCount}</p>
-        <input type="text" name="titulos[]" placeholder="Nome da Lição" required />
-        <input class="addVideo" type="file" name="videos[]" required />
-        <span class="video-name"></span>
-        <button type="button" class="delete-btn" onclick="removerCard(this)">✖</button>
-      `;
-      container.appendChild(newCard);
-    });
-
-    function removerCard(btn) {
-      const card = btn.closest('.lesson-card');
-      card.remove();
-      atualizarNumeracao();
-    }
-
-    function atualizarNumeracao() {
-      const cards = document.querySelectorAll('.lesson-card:not(.add-lesson)');
-      lessonCount = 0;
-      cards.forEach((card, index) => {
-        lessonCount++;
-        const titulo = card.querySelector('.lesson-title');
-        if (titulo) {
-          titulo.textContent = `Lição ${index + 1}`;
-        }
-      });
-    }
-
-    // Atualiza o nome do vídeo selecionado
-    document.addEventListener('change', function (e) {
-      if (e.target && e.target.matches('input.addVideo')) {
-        const fileInput = e.target;
-        const file = fileInput.files[0];
-        const nameDisplay = fileInput.parentElement.querySelector('.video-name') ||
-          fileInput.closest('.lesson-card')?.querySelector('.video-name');
-
-        if (file && nameDisplay) {
-          nameDisplay.textContent = `🎞️ ${file.name}`;
-        } else if (nameDisplay) {
-          nameDisplay.textContent = '';
-        }
-      }
-    });
-  </script>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Criar Curso e Adicionar Aulas</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
-
 </html>

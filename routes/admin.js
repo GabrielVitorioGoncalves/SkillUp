@@ -333,52 +333,48 @@ router.get('/cria-curso', async function (req, res) {
   }
 });
 
-// Rota para processar a criação do curso
-router.post('/cria-curso', uploadCurso, async function (req, res) {
-  const { nome, descricao, categoria, titulos } = req.body;
 
-  const capaFile = req.files?.capa?.[0];
-  const nomeArquivoCapa = capaFile ? capaFile.filename : null;
+router.post('/cria-curso', upload.single('capa'), async function (req, res, next) {
 
-  try {
-    const conexao = await global.banco.conectarBD();
+    try {
+        verificarLogin(res);
+        const { nome, descricao, categorias } = req.body; 
+        const capaFile = req.file;
 
-    // 1. Inserir o curso
-    const [cursoResult] = await conexao.query(
-      'INSERT INTO cursos (cur_titulo, cur_descricao, cur_categoria, capa) VALUES (?, ?, ?, ?)',
-      [nome, descricao, categoria, nomeArquivoCapa]
-    );
-    const cursoId = cursoResult.insertId;
+        if (!nome || !descricao) {
 
-    // 2. Inserir vídeos e associar
-    const arquivosVideos = req.files?.videos || [];
-    // titulos pode vir como string se só tiver 1. Normalizamos para array.
-    const titulosArray = Array.isArray(titulos) ? titulos : [titulos];
+            return res.status(400).send('Nome e descrição são obrigatórios.');
+        }
 
-    for (let i = 0; i < arquivosVideos.length; i++) {
-      const video = arquivosVideos[i];
-      const nomeArquivoVideo = video.filename;
-      const titulo = titulosArray[i] || `Lição ${i + 1}`;
+        const nomeArquivoCapa = capaFile ? capaFile.filename : null;
 
-      // Inserir na tabela `video`
-      const [videoResult] = await conexao.query(
-        'insert into videos (vid_titulo, caminho_do_arquivo) VALUES (?, ?)',
-        [titulo, nomeArquivoVideo]
-      );
-      const videoId = videoResult.insertId;
+        const conexao = await banco.conectarBD();
+        await conexao.beginTransaction();
 
-      // Relacionar com o curso (ordem baseada no índice)
-      await conexao.query(
-        'INSERT INTO curso_video (id_curso, id_video, ordem) VALUES (?, ?, ?)',
-        [cursoId, videoId, i + 1]
-      );
+        const [cursoResult] = await conexao.query(
+            'INSERT INTO cursos (cur_titulo, cur_descricao, capa) VALUES (?, ?, ?)',
+            [nome, descricao, nomeArquivoCapa]
+        );
+        const cursoId = cursoResult.insertId;
+        let categoriasSelecionadas = categorias || [];
+        if (!Array.isArray(categoriasSelecionadas)) {
+            categoriasSelecionadas = [categoriasSelecionadas];
+        }
+        if (categoriasSelecionadas.length > 0) {
+            const valoresParaInserir = categoriasSelecionadas.map(idTema => [cursoId, idTema]);
+            await conexao.query("INSERT INTO curso_categoria (id_curso, id_tema) VALUES ?", [valoresParaInserir]);
+        }
+
+        await conexao.commit();
+
+        res.redirect(`/admin/editar-curso/${cursoId}`);
+
+    } catch (erro) {
+        const conexao = await banco.conectarBD();
+        await conexao.rollback();
+        console.error('Erro ao criar curso:', erro);
+        next(erro);
     }
-
-    res.redirect('/admin/principalAdm');
-  } catch (erro) {
-    console.error('Erro ao criar curso com vídeos:', erro);
-    res.status(500).send('Erro ao criar curso com vídeos.');
-  }
 });
 
 router.get('/temas', async function (req, res) {
@@ -508,7 +504,7 @@ router.post('/editar-aula/:idVideo', upload.single('video'), async (req, res, ne
   try {
     verificarLogin(res);
     const { idVideo } = req.params;
-    const { titulo, idCurso } = req.body; 
+    const { titulo, idCurso } = req.body;
     const novoVideoFile = req.file;
 
     let nomeNovoArquivo = null;
@@ -522,6 +518,22 @@ router.post('/editar-aula/:idVideo', upload.single('video'), async (req, res, ne
 
   } catch (error) {
     console.error("Erro ao alterar a aula:", error);
+    next(error);
+  }
+});
+
+router.post('/excluir-curso/:idCurso', async function (req, res, next)  {
+  try {
+    verificarLogin(res);
+
+    const { idCurso } = req.params;
+
+    await global.banco.excluirTudo(idCurso);
+
+    res.redirect('/admin/principalAdm?sucesso=excluido');
+
+  } catch (error) {
+    console.error("Erro ao excluir curso:", error);
     next(error);
   }
 });

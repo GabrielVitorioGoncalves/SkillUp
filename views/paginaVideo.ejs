@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheets/paginaVideo.css">
-    <link rel="stylesheet" href="/stylesheets/nav.css">
-    <link rel="stylesheet" href="/stylesheets/footer.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/stylesheets/paginaVideo.css">
     <title>Assistindo: <%= videoAtual.vid_titulo %>
     </title>
+
+    <link rel='stylesheet' href='/stylesheets/nav.css'>
+    <link rel='stylesheet' href='/stylesheets/footer.css'>
+    <link rel='stylesheet' href='/stylesheets/paginaVideo.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -19,104 +19,177 @@
         <div class="video-container">
             <main class="video-main">
                 <div class="video-player-wrapper">
-                    <video id="videoPlayer" data-video-id="<%= videoAtual.id_video %>" controls width="100%">
-
-                        <source src="/videos/<%= videoAtual.caminho_do_arquivo %>" type="video/mp4">
-
+                    <video id="videoPlayer" data-video-id="<%= videoAtual.id_video %>" controls width="100%" autoplay>
+                        <source src="/uploads/videos/<%= videoAtual.caminho_do_arquivo %>" type="video/mp4">
                         Seu navegador não suporta a tag de vídeo.
                     </video>
                 </div>
 
                 <div class="video-info-bar">
-                    <h1 class="video-title">Nome da videoaula</h1>
+                    <h1 class="video-title">
+                        <%= videoAtual.vid_titulo %>
+                    </h1>
                     <div class="video-actions">
-                        <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <i class="far fa-star"></i>
+                        <div class="rating-widget">
+                            <div class="stars">
+                                <i class="fa-regular fa-star" data-value="1"></i>
+                                <i class="fa-regular fa-star" data-value="2"></i>
+                                <i class="fa-regular fa-star" data-value="3"></i>
+                                <i class="fa-regular fa-star" data-value="4"></i>
+                                <i class="fa-regular fa-star" data-value="5"></i>
+                            </div>
+                            <span class="rating-text">Avalie esta aula</span>
                         </div>
                         <div class="video-navigation">
-                            <button class="nav-button prev-video">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="nav-button next-video">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                            <button class="nav-button prev-video"><i class="fas fa-chevron-left"></i></button>
+                            <button class="nav-button next-video"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </main>
+
             <aside class="video-playlist">
+                <div class="course-progress-container">
+                    <h4>Progresso do Curso</h4>
+                    <div class="course-progress-bar">
+                        <div class="progress" style="width: <%= progresso %>%;"></div>
+                    </div>
+                    <span>
+                        <%= progresso %>% Concluído
+                    </span>
+                </div>
 
-                <% if (playlist && playlist.length> 0) { %>
-                    <% playlist.forEach((videoDaLista, index)=> { %>
-
-                        <%# Verifica se o vídeo da lista é o que está tocando para aplicar a classe 'current' %>
+                <ul class="lista-aulas">
+                    <% if (playlist && playlist.length> 0) { %>
+                        <% playlist.forEach((videoDaLista, index)=> { %>
                             <div
                                 class="playlist-item <%= videoDaLista.id_video == videoAtual.id_video ? 'current' : '' %>">
-
                                 <a href="/curso/<%= idCurso %>/video/<%= videoDaLista.id_video %>" class="item-link">
                                     <div class="item-info">
-                                        <%# Usando 'index + 1' para numerar as lições %>
-                                            <span class="item-title">Lição <%= index + 1 %></span>
-                                            <i class="fas fa-play-circle item-play-icon"></i>
+                                        <span class="item-title">Lição <%= index + 1 %></span>
+                                        <i class="fas fa-play-circle item-play-icon"></i>
                                     </div>
                                     <p class="item-details">
                                         <%= videoDaLista.vid_titulo %>
                                     </p>
                                 </a>
                             </div>
-
                             <% }); %>
                                 <% } else { %>
                                     <p>Nenhum vídeo encontrado para este curso.</p>
                                     <% } %>
+                </ul>
 
+                <div id="container-certificado" class="container-certificado-wrapper">
+                </div>
             </aside>
-
-
-            <div class="item-toggle">
-                <i class="fas fa-chevron-up"></i>
-            </div>
-        </div>
-
-        </aside>
         </div>
 
         <%- include('partials/footer') %>
-<script>
-    const videoPlayer = document.getElementById('videoPlayer');
 
-    // Adiciona um "ouvinte" que dispara quando o vídeo termina
-    videoPlayer.addEventListener('ended', () => {
-        const idVideo = videoPlayer.dataset.videoId;
-        
-        console.log(`Vídeo ${idVideo} concluído. Enviando para o servidor...`);
+            <script>
+                // --- VARIÁVEIS GLOBAIS DA PÁGINA ---
+                const videoPlayer = document.getElementById('videoPlayer');
+                const containerCertificado = document.getElementById('container-certificado');
+                const stars = document.querySelectorAll('.rating-widget .stars i');
+                const ratingText = document.querySelector('.rating-widget .rating-text');
 
-        // Usamos a API 'fetch' para fazer a requisição POST para nossa rota
-        fetch('/api/progresso/marcar-visto', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ idVideo: idVideo }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Servidor confirmou o progresso!');
-                // Aqui você pode mudar a cor do item na playlist para verde, por exemplo.
-            } else {
-                console.error('Falha ao salvar progresso:', data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Erro de rede:', error);
-        });
-    });
-</script>
+                // Lendo os dados que o EJS nos passou do servidor
+                const idVideoAtual = videoPlayer ? videoPlayer.dataset.videoId : null;
+                const idCurso = "<%= typeof idCurso !== 'undefined' ? idCurso : '' %>";
+                const progressoAtual = parseInt("<%= typeof progresso !== 'undefined' ? progresso : 0 %>", 10);
 
+                // --- LÓGICA DO CERTIFICADO ---
+                function mostrarBotaoCertificado() {
+                    if (idCurso && containerCertificado && !containerCertificado.querySelector('.btn-certificado')) {
+                        containerCertificado.innerHTML = `
+                <a href="/curso/${idCurso}/certificado" class="btn btn-success btn-certificado" target="_blank">
+                    <i class="fas fa-certificate"></i> Parabéns! Gerar Certificado
+                </a>
+            `;
+                    }
+                }
+
+                // Se a página já carregar com 100%, já mostra o botão
+                if (progressoAtual >= 100) {
+                    mostrarBotaoCertificado();
+                }
+
+                // --- LÓGICA DE PROGRESSO (AO FINAL DO VÍDEO) ---
+                if (videoPlayer) {
+                    videoPlayer.addEventListener('ended', () => {
+                        if (!idVideoAtual) return;
+
+                        console.log(`Vídeo ${idVideoAtual} concluído. Marcando como visto...`);
+
+                        fetch('/api/progresso/marcar-visto', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ idVideo: idVideoAtual }),
+                        })
+                            .then(res => res.ok ? res.json() : Promise.reject('Erro ao marcar como visto'))
+                            .then(data => {
+                                if (data.success) {
+                                    // Recarregar a página é a forma mais simples e robusta
+                                    // de atualizar a barra de progresso e o status da playlist.
+                                    location.reload();
+                                }
+                            })
+                            .catch(err => console.error(err));
+                    });
+                }
+
+                // --- LÓGICA DA AVALIAÇÃO (ESTRELAS) ---
+                function enviarAvaliacao(idVideo, nota) {
+                    fetch('/api/video/avaliar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idVideo: idVideo, nota: nota }) // Envia a nota correta
+                    })
+                        .then(res => res.ok ? res.json() : res.json().then(err => Promise.reject(err)))
+                        .then(data => {
+                            if (data.success) {
+                                ratingText.textContent = "Obrigado pela sua avaliação!";
+                                console.log('Avaliação salva com sucesso!');
+                            } else {
+                                ratingText.textContent = data.message || "Erro ao salvar. Tente mais tarde.";
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Erro de rede ou do servidor:', err);
+                            ratingText.textContent = "Erro de conexão ao salvar avaliação.";
+                        });
+                }
+
+                function highlightStars(value) {
+                    stars.forEach(star => {
+                        if (parseInt(star.dataset.value) <= value) {
+                            star.classList.replace('fa-regular', 'fa-solid');
+                        }
+                    });
+                }
+
+                function resetStars() {
+                    stars.forEach(star => {
+                        star.classList.replace('fa-solid', 'fa-regular');
+                    });
+                }
+
+                stars.forEach(star => {
+                    star.addEventListener('mouseover', function () {
+                        highlightStars(parseInt(this.dataset.value));
+                    });
+
+                    star.addEventListener('mouseout', resetStars);
+
+                    star.addEventListener('click', function () {
+                        const nota = parseInt(this.dataset.value);
+                        if (idVideoAtual && nota > 0) {
+                            enviarAvaliacao(idVideoAtual, nota);
+                        }
+                    });
+                });
+            </script>
 </body>
+
 </html>

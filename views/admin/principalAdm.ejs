@@ -1,88 +1,107 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill UP - Cursos</title>
- <link rel='stylesheet' href="../../stylesheets/principalAdm.css">
+  <link rel='stylesheet' href="../../stylesheets/principalAdm.css">
   <link rel='stylesheet' href="../../stylesheets/sidebarAdmin.css">
 </head>
+
 <body>
   <div class="page-wrapper">
     <%- include('../partials/admin/sidebar') %>
 
-    <main class="main-content">
-      <section class="stats">
-        <div class="card purple">
-          <h4>Lições Totais</h4>
-          <p class="big">1604</p>
-          <p>Lições Concluídas</p>
-        </div>
-        <div class="card pink">
-          <h4>Total de Cursos</h4>
-          <p class="big">256</p>
-          <p>Cursos Concluídos</p>
-        </div>
-        <div class="card green">
-          <h4>Taxa de Conclusão de Cursos</h4>
-          <p class="big">79.8%</p>
-        </div>
-      </section>
+      <main class="main-content">
+        <section class="stats">
+          <div class="card purple">
+            <h4>Lições Totais</h4>
+            <p class="big">1604</p>
+            <p>Lições Concluídas</p>
+          </div>
+          <div class="card pink">
+            <h4>Total de Cursos</h4>
+            <p class="big">256</p>
+            <p>Cursos Concluídos</p>
+          </div>
+          <div class="card green">
+            <h4>Taxa de Conclusão de Cursos</h4>
+            <p class="big">79.8%</p>
+          </div>
+        </section>
 
-<section class="course-section">
-  <div class="course-layout">
-    <div class="course-scrollable">
-      
-<div class="course-grid" id="courseGrid">
-  <% if (cursos && cursos.length > 0) { %>
-    <% cursos.forEach(curso => { %>
-      <div class="course-card">
-       <img src="<%= curso.capa ? '/uploads/capas/' + curso.capa : 'https://via.placeholder.com/150' %>" alt="<%= curso.cur_titulo %>">
-        <h5><%= curso.cur_titulo.toUpperCase() %></h5>
-        <p><%= curso.cur_descricao %></p>
-        <span><%= curso.cur_categoria %></span>
-      <a href="/admin/editar-curso/<%= curso.id_curso %>" class="edit-button">Editar</a>
-      </div>
-    <% }) %>
-  <% } else { %>
-    <p>Nenhum curso encontrado.</p>
-  <% } %>
-</div>
+        <section class="course-section">
+          <div class="course-layout">
+            <div class="course-scrollable">
+
+              <div class="course-grid" id="courseGrid">
+                <% if (cursos && cursos.length> 0) { %>
+                  <% cursos.forEach(curso=> { %>
+                    <div class="course-card">
+                      <img src="<%= curso.capa ? '/uploads/capas/' + curso.capa : 'https://via.placeholder.com/150' %>"
+                        alt="<%= curso.cur_titulo %>">
+
+                      <h5>
+                        <%= curso.cur_titulo.toUpperCase() %>
+                      </h5>
+                      <p>
+                        <%= curso.cur_descricao %>
+                      </p>
+                      <span>
+                        <%= curso.cur_categoria %>
+                      </span>
+
+                      <div class="card-actions">
+                        <a href="/admin/editar-curso/<%= curso.id_curso %>" class="btn btn-secondary">Editar</a>
+
+                        <form action="/admin/excluir-curso/<%= curso.id_curso %>" method="POST"
+                          onsubmit="return confirm('ATENÇÃO: Isso apagará o curso, todas as suas aulas e o progresso dos alunos. Tem certeza?');">
+                          <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                      </div>
+                    </div>
+                    <% }) %>
+                      <% } else { %>
+                        <p>Nenhum curso encontrado.</p>
+                        <% } %>
+              </div>
 
 
-<script>
+              <script>
 
 
-  const courseGrid = document.getElementById('courseGrid');
-  for(let i=0; i<10; i++) {
-    cursos.forEach(curso => {
-      const card = document.createElement('div');
-      card.classList.add('course-card');
-      card.innerHTML = `
+                const courseGrid = document.getElementById('courseGrid');
+                for (let i = 0; i < 10; i++) {
+                  cursos.forEach(curso => {
+                    const card = document.createElement('div');
+                    card.classList.add('course-card');
+                    card.innerHTML = `
         <img src="${curso.img}" alt="${curso.titulo}">
         <h5>${curso.titulo.toUpperCase()}</h5>
         <p>${curso.descricao}</p>
         <span>${curso.professor}</span>
       `;
-      courseGrid.appendChild(card);
-    });
-  }
-</script>
+                    courseGrid.appendChild(card);
+                  });
+                }
+              </script>
 
-        <!-- Outros cards aqui -->
-    </div>
+              <!-- Outros cards aqui -->
+            </div>
 
-    <div class="course-sidebar">
-      <input type="text" class="search-box" placeholder="🔍 Pesquise o curso" />
-      <button class="add">Adicionar Curso</button>
-      <button class="edit">Editar Curso</button>
-    </div>
-  </div>
-</section>
+            <div class="course-sidebar">
+              <input type="text" class="search-box" placeholder="🔍 Pesquise o curso" />
+              <button class="add">Adicionar Curso</button>
+              <button class="edit">Editar Curso</button>
+            </div>
+          </div>
+        </section>
 
-    </main>
+      </main>
   </div>
 
 
 </body>
+
 </html>

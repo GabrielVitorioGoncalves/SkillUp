@@ -88,7 +88,7 @@ async function excluirAdmin(id_admin) {
     const conexao = await conectarBD(); // Função que conecta ao BD
     try {
         // Query para excluir admin pelo id
-        await conexao.query('DELETE FROM admin WHERE id_admin = ?', [id_admin]);
+        await conexao.query('delete from admin where id_admin = ?', [id_admin]);
     } catch (err) {
         throw err;
     }
@@ -97,13 +97,13 @@ async function excluirAdmin(id_admin) {
 
 async function atualizarAdmin(id, nome, email) {
     const conexao = await conectarBD();
-    await conexao.query('UPDATE admin SET adm_nome = ?, adm_email = ? WHERE id_admin = ?', [nome, email, id]);
+    await conexao.query('UPDATE admin SET adm_nome = ?, adm_email = ? where id_admin = ?', [nome, email, id]);
 }
 
 async function buscarAdminPorId(id) {
     const conexao = await conectarBD();
     const [linhas] = await conexao.query(
-        'SELECT * FROM admin WHERE id_admin = ?',
+        'SELECT * FROM admin where id_admin = ?',
         [id]
     );
     return linhas[0];
@@ -163,7 +163,7 @@ async function admBuscarCategoria(nome) {
  */
 async function buscarCategoriasDeCursos() {
     const conex = await conectarBD();
-    const sql = "SELECT DISTINCT cur_categoria FROM cursos WHERE cur_categoria IS NOT NULL AND cur_categoria <> '' ORDER BY cur_categoria ASC;";
+    const sql = "SELECT DISTINCT cur_categoria FROM cursos where cur_categoria IS NOT NULL AND cur_categoria <> '' ORDER BY cur_categoria ASC;";
     const [categorias] = await conex.query(sql);
     return categorias;
 }
@@ -308,12 +308,21 @@ async function adicionarVideoAoCurso(idCurso, tituloVideo, caminhoArquivo) {
     }
 }
 
-async function buscarVideoComCursoId(idVideo){
-     const conex = await conectarBD();
+async function buscarVideoComCursoId(idVideo) {
+    const conex = await conectarBD();
     const sql = `select v.*, cv.id_curso from videos v join curso_video cv on v.id_video = cv.id_video  where v.id_video = ? limit 1;`;
     const [[video]] = await conex.query(sql, [idVideo]);
     return video;
 }
+
+
+async function buscarUsuarioPorId(id) {
+    const conexao = await conectarBD();
+    const [linhas] = await conexao.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
+    return linhas[0];
+}
+
+
 async function alterarVideo(idVideo, novoTitulo, nomeNovoArquivo) {
     const conex = await conectarBD();
     if (nomeNovoArquivo) {
@@ -335,6 +344,65 @@ async function alterarVideo(idVideo, novoTitulo, nomeNovoArquivo) {
     }
 }
 
+async function salvarAvaliacao(idUsuario, idVideo, nota) {
+    const conex = await conectarBD();
+    const sql = `
+        INSERT INTO avaliacao (id_usuario, id_video, ava_nota, ava_dataHora)
+        VALUES (?, ?, ?, NOW())
+        ON DUPLICATE KEY UPDATE ava_nota = ?, ava_dataHora = NOW();
+    `;
+    await conex.query(sql, [idUsuario, idVideo, nota, nota]);
+}
+
+async function excluirTudo(idCurso) {
+    const conex = await conectarBD();
+    await conex.beginTransaction();
+
+    try {
+        const cursoParaExcluir = await buscarCursoPorId(idCurso);
+        const videosParaExcluir = await buscarPlaylistDoCurso(idCurso); 
+        await conex.query('DELETE FROM curso_video WHERE id_curso = ?', [idCurso]);
+
+        if (videosParaExcluir.length > 0) {
+            const idsDosVideos = videosParaExcluir.map(v => v.id_video);
+            await conex.query('DELETE FROM historico WHERE id_video IN (?)', [idsDosVideos]);
+            await conex.query('DELETE FROM videos WHERE id_video IN (?)', [idsDosVideos]);
+        }
+        await conex.query('DELETE FROM cursos WHERE id_curso = ?', [idCurso]);
+
+        if (cursoParaExcluir && cursoParaExcluir.capa) {
+            const caminhoCapa = path.join(__dirname, '../public/uploads/capas', cursoParaExcluir.capa);
+            if (fs.existsSync(caminhoCapa)) {
+                fs.unlinkSync(caminhoCapa);
+            }
+        }
+        for (const video of videosParaExcluir) {
+            if (video.caminho_do_arquivo) {
+                const caminhoVideo = path.join(__dirname, '../public/uploads/videos', video.caminho_do_arquivo);
+                if (fs.existsSync(caminhoVideo)) {
+                    fs.unlinkSync(caminhoVideo);
+                }
+            }
+        }
+        await conex.commit();
+        console.log(`Curso ${idCurso} e todos os seus dados foram excluídos com sucesso.`);
+
+    } catch (error) {
+        await conex.rollback();
+        console.error(`Erro na transação ao excluir curso ${idCurso}:`, error);
+        throw error; 
+    }
+}
+
+async function buscarTodosCursosComProgresso(idUsuario) {
+    const conex = await conectarBD();
+    const sql = ` select c.*,count(distinct cv.id_video) as total_videos,count(distinct  h.id_video) as videos_vistos, avg(av.ava_nota) as nota_media from cursos c
+        left join curso_video cv on c.id_curso = cv.id_curso 
+        left join historico h on cv.id_video = h.id_video and h.id_usuario = ? and h.his_concluido = 1 left join avaliacao av on cv.id_video = av.id_video group by c.id_curso order by c.cur_titulo ASC;`;
+    const [cursos] = await conex.query(sql, [idUsuario]);
+    return cursos;
+}
+
 
 module.exports = {
     conectarBD, buscarUsuario,
@@ -344,5 +412,5 @@ module.exports = {
     admAtualizarCategoria, admBuscarCategoriaPorCodigo,
     admInserirCategoria, admBuscarCategoria,
     admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId,
-    cadastrarCurso, buscarCategoriasDeCursos, buscarCursosMaisAvaliados, buscarTodosOsCursos, buscarCursosRecentes, buscarVideoPorId, buscarPlaylistDoCurso, marcarVideoComoVisto, contarVideosDoCurso, contarVideosVistosDoCurso, buscarPrimeiroVideo, atualizarCurso, buscarCursoPorId, excluirVideo,adicionarVideoAoCurso,buscarVideoComCursoId, alterarVideo
+    cadastrarCurso, buscarCategoriasDeCursos, buscarCursosMaisAvaliados, buscarTodosOsCursos, buscarCursosRecentes, buscarVideoPorId, buscarPlaylistDoCurso, marcarVideoComoVisto, contarVideosDoCurso, contarVideosVistosDoCurso, buscarPrimeiroVideo, atualizarCurso, buscarCursoPorId, excluirVideo, adicionarVideoAoCurso, buscarVideoComCursoId, alterarVideo, excluirTudo, buscarUsuarioPorId,buscarTodosCursosComProgresso,salvarAvaliacao
 }

@@ -25,6 +25,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+app.use((req, res, next) => {
+  res.locals.currentUrl = req.url;
+  next();
+});
+
+
+app.use('/', indexRouter);
+app.use('/admin', adminRouter);
+
 // Configuração do Multer para upload de arquivos
 const storage = multer.diskStorage({
  destination: (req, file, cb) => {
@@ -51,17 +62,8 @@ const upload = multer({
 
 
 
-app.use((req, res, next) => {
-  res.locals.currentUrl = req.url;
-  next();
-});
-
-
-app.use('/', indexRouter);
-app.use('/admin', adminRouter);
-
 //teste multer (upload)
-app.use('/uploads', express.static('uploads'));
+//app.use('/uploads', express.static('uploads'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
