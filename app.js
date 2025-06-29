@@ -11,6 +11,7 @@ const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
+var apiRouter = require('./routes/api');
 
 
 var app = express();
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
+app.use('/api', apiRouter);
 
 // Configuração do Multer para upload de arquivos
 const storage = multer.diskStorage({
@@ -82,3 +84,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+ 
