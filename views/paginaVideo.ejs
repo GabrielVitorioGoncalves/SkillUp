@@ -88,18 +88,15 @@
         <%- include('partials/footer') %>
 
             <script>
-                // --- VARIÁVEIS GLOBAIS DA PÁGINA ---
+                
                 const videoPlayer = document.getElementById('videoPlayer');
                 const containerCertificado = document.getElementById('container-certificado');
                 const stars = document.querySelectorAll('.rating-widget .stars i');
                 const ratingText = document.querySelector('.rating-widget .rating-text');
-
-                // Lendo os dados que o EJS nos passou do servidor
                 const idVideoAtual = videoPlayer ? videoPlayer.dataset.videoId : null;
                 const idCurso = "<%= typeof idCurso !== 'undefined' ? idCurso : '' %>";
                 const progressoAtual = parseInt("<%= typeof progresso !== 'undefined' ? progresso : 0 %>", 10);
-
-                // --- LÓGICA DO CERTIFICADO ---
+                //Parte que fazemos o certificado
                 function mostrarBotaoCertificado() {
                     if (idCurso && containerCertificado && !containerCertificado.querySelector('.btn-certificado')) {
                         containerCertificado.innerHTML = `
@@ -109,13 +106,11 @@
             `;
                     }
                 }
-
-                // Se a página já carregar com 100%, já mostra o botão
                 if (progressoAtual >= 100) {
                     mostrarBotaoCertificado();
                 }
 
-                // --- LÓGICA DE PROGRESSO (AO FINAL DO VÍDEO) ---
+                //Parte do progresso
                 if (videoPlayer) {
                     videoPlayer.addEventListener('ended', () => {
                         if (!idVideoAtual) return;
@@ -130,8 +125,6 @@
                             .then(res => res.ok ? res.json() : Promise.reject('Erro ao marcar como visto'))
                             .then(data => {
                                 if (data.success) {
-                                    // Recarregar a página é a forma mais simples e robusta
-                                    // de atualizar a barra de progresso e o status da playlist.
                                     location.reload();
                                 }
                             })
@@ -139,7 +132,7 @@
                     });
                 }
 
-                // --- LÓGICA DA AVALIAÇÃO (ESTRELAS) ---
+                // Avaliação por estrelas (tive ajuda de um indiano)
                 function enviarAvaliacao(idVideo, nota) {
                     fetch('/api/video/avaliar', {
                         method: 'POST',

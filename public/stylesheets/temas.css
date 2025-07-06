@@ -1,6 +1,4 @@
-/* Conteúdo para: public/stylesheets/cria_curso.css */
 
-/* Garante que o layout principal ocupe a tela toda */
 .page-wrapper {
     display: flex;
     min-height: 100vh;
@@ -8,7 +6,7 @@
 
 .main-content {
     padding: 2rem;
-    background-color: #1a1d21; /* Fundo principal escuro */
+    background-color: #1a1d21;
     width: 100%;
 }
 
@@ -18,7 +16,7 @@
 }
 
 .form-card {
-    background-color: #25282e; /* Fundo do card um pouco mais claro */
+    background-color: #25282e; 
     padding: 2rem;
     border-radius: 8px;
     border: 1px solid #3a3f44;
@@ -93,7 +91,7 @@
 }
 
 .checkbox-item label {
-    margin-bottom: 0; /* Reseta a margem para alinhar com o checkbox */
+    margin-bottom: 0; 
     color: #e0e0e0;
     cursor: pointer;
 }

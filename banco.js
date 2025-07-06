@@ -346,11 +346,7 @@ async function alterarVideo(idVideo, novoTitulo, nomeNovoArquivo) {
 
 async function salvarAvaliacao(idUsuario, idVideo, nota) {
     const conex = await conectarBD();
-    const sql = `
-        INSERT INTO avaliacao (id_usuario, id_video, ava_nota, ava_dataHora)
-        VALUES (?, ?, ?, NOW())
-        ON DUPLICATE KEY UPDATE ava_nota = ?, ava_dataHora = NOW();
-    `;
+    const sql = "insert into avaliacao (id_usuario, id_video, ava_nota, ava_dataHora) values (?, ?, ?, NOW()) on duplicate key update ava_nota = ?, ava_dataHora = now(); ";
     await conex.query(sql, [idUsuario, idVideo, nota, nota]);
 }
 
@@ -360,15 +356,19 @@ async function excluirTudo(idCurso) {
 
     try {
         const cursoParaExcluir = await buscarCursoPorId(idCurso);
-        const videosParaExcluir = await buscarPlaylistDoCurso(idCurso); 
-        await conex.query('DELETE FROM curso_video WHERE id_curso = ?', [idCurso]);
+        const videosParaExcluir = await buscarPlaylistDoCurso(idCurso);
+
+        await conex.query('delete from curso_categoria where id_curso = ?', [idCurso]);
+        await conex.query('delete from curso_video where id_curso = ?', [idCurso]);
 
         if (videosParaExcluir.length > 0) {
             const idsDosVideos = videosParaExcluir.map(v => v.id_video);
-            await conex.query('DELETE FROM historico WHERE id_video IN (?)', [idsDosVideos]);
-            await conex.query('DELETE FROM videos WHERE id_video IN (?)', [idsDosVideos]);
+            await conex.query('delete from avaliacao where id_video in (?)', [idsDosVideos]);
+            await conex.query('delete from historico where id_video in (?)', [idsDosVideos]);
+            await conex.query('delete from videos where id_video in (?)', [idsDosVideos]);
         }
-        await conex.query('DELETE FROM cursos WHERE id_curso = ?', [idCurso]);
+
+        await conex.query('delete from cursos where id_curso = ?', [idCurso]);
 
         if (cursoParaExcluir && cursoParaExcluir.capa) {
             const caminhoCapa = path.join(__dirname, '../public/uploads/capas', cursoParaExcluir.capa);
@@ -376,6 +376,7 @@ async function excluirTudo(idCurso) {
                 fs.unlinkSync(caminhoCapa);
             }
         }
+
         for (const video of videosParaExcluir) {
             if (video.caminho_do_arquivo) {
                 const caminhoVideo = path.join(__dirname, '../public/uploads/videos', video.caminho_do_arquivo);
@@ -384,13 +385,11 @@ async function excluirTudo(idCurso) {
                 }
             }
         }
-        await conex.commit();
-        console.log(`Curso ${idCurso} e todos os seus dados foram excluídos com sucesso.`);
 
+        await conex.commit();
     } catch (error) {
         await conex.rollback();
-        console.error(`Erro na transação ao excluir curso ${idCurso}:`, error);
-        throw error; 
+        throw error;
     }
 }
 
@@ -412,5 +411,5 @@ module.exports = {
     admAtualizarCategoria, admBuscarCategoriaPorCodigo,
     admInserirCategoria, admBuscarCategoria,
     admBuscarCategorias, buscarTodosAdmins, excluirAdmin, atualizarAdmin, buscarAdminPorId,
-    cadastrarCurso, buscarCategoriasDeCursos, buscarCursosMaisAvaliados, buscarTodosOsCursos, buscarCursosRecentes, buscarVideoPorId, buscarPlaylistDoCurso, marcarVideoComoVisto, contarVideosDoCurso, contarVideosVistosDoCurso, buscarPrimeiroVideo, atualizarCurso, buscarCursoPorId, excluirVideo, adicionarVideoAoCurso, buscarVideoComCursoId, alterarVideo, excluirTudo, buscarUsuarioPorId,buscarTodosCursosComProgresso,salvarAvaliacao
+    cadastrarCurso, buscarCategoriasDeCursos, buscarCursosMaisAvaliados, buscarTodosOsCursos, buscarCursosRecentes, buscarVideoPorId, buscarPlaylistDoCurso, marcarVideoComoVisto, contarVideosDoCurso, contarVideosVistosDoCurso, buscarPrimeiroVideo, atualizarCurso, buscarCursoPorId, excluirVideo, adicionarVideoAoCurso, buscarVideoComCursoId, alterarVideo, excluirTudo, buscarUsuarioPorId, buscarTodosCursosComProgresso, salvarAvaliacao
 }
