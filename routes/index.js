@@ -158,7 +158,12 @@ router.get('/curso/:idCurso/certificado', verificarLogin, async (req, res, next)
 
     const totalVideos = await banco.contarVideosDoCurso(idCurso);
     const videosVistos = await banco.contarVideosVistosDoCurso(idUsuario, idCurso);
-
+    if(!videoAtual){
+      const err = new Error ('Vídeo não encontrado.');
+      err.status = 404;
+      return next(err);
+    }
+    
     if (totalVideos === 0 || videosVistos < totalVideos) {
       return res.status(403).send('Você ainda não concluiu este curso para emitir o certificado.');
     }
