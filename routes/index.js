@@ -231,4 +231,8 @@ router.post('/api/video/avaliar', verificarLogin, async (req, res, next) => {
   }
 });
 
+router.get('/ajuda', function(req, res, next) {
+  res.render('ajuda', { title: 'Central de Ajuda' });
+});
+
 module.exports = router;

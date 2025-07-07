@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Ajuda - SkillUP</title>
+    <link rel='stylesheet' href='/stylesheets/nav.css'>
+    <link rel='stylesheet' href='/stylesheets/footer.css'>
+    <link rel='stylesheet' href='/stylesheets/ajuda.css'> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <main class="help-center-container">
+        <h1 class="main-title">Central de Ajuda</h1>
+        <div class="title-divider"></div>
+
+        <section class="faq-section">
+            <h2>Dúvidas frequentes</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Como assistir minhas aulas ?</div>
+                <div class="faq-answer">
+                    <p>Assim que se cadastrar no site irá aparecer os cursos, após clicar escolher seu curso basta clicar em cima dele que o curso irá começar.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Posso assistir pelo Celular</div>
+                <div class="faq-answer">
+                    <p>Sim! Você pode acessar os cursos pelo navegador do celular normalmente.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Esqueci minha senha. E agora?</div>
+                <div class="faq-answer">
+                    <p>Na página Login, clique em "Esqueci a senha" e lá nos iremos de tar todas as instruções para que você posso redefini-la.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Certificados</h2>
+            <div class="faq-item">
+                <div class="faq-question">Como recebo o certificado?</div>
+                <div class="faq-answer">
+                    <p>Ao concluir 100% de um curso, um botão para gerar o certificado aparecerá na página do curso e na página do player de vídeo. Basta clicar para baixar seu PDF.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">O certificado tem validade oficial?</div>
+                <div class="faq-answer">
+                    <p>Nossos certificados são de conclusão e servem para comprovar seu conhecimento e dedicação, mas não possuem vínculo com o MEC.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Suporte técnico</h2>
+            <div class="faq-item">
+                <div class="faq-question">O vídeo não carrega, oque fazer?</div>
+                <div class="faq-answer">
+                    <p>Verifique sua conexão com a internet. Se persistir, tente limpar o cache do seu navegador ou usar um navegador diferente. Se nada resolver, entre em contato com nosso suporte.</p>
+                </div>
+            </div>
+             <div class="faq-item">
+                <div class="faq-question">O site está com erro, oque fazer?</div>
+                <div class="faq-answer">
+                    <p>Pedimos desculpas pelo inconveniente. Por favor, entre em contato com nossa equipe através das redes sociais informando o erro para que possamos corrigi-lo o mais rápido possível.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="contact-section">
+            <h3>Ainda com dúvidas?</h3>
+            <p>Se sua dúvida não foi respondida, entre em contato com nossa equipe através das redes sociais.</p>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        // JavaScript para o efeito Acordeão
+        document.addEventListener('DOMContentLoaded', function () {
+            const questions = document.querySelectorAll('.faq-question');
+
+            questions.forEach(question => {
+                question.addEventListener('click', function () {
+                    // Fecha todas as outras respostas abertas
+                    questions.forEach(q => {
+                        if (q !== this) {
+                            q.classList.remove('active');
+                            q.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+
+                    // Alterna a classe 'active' na pergunta clicada
+                    this.classList.toggle('active');
+
+                    const answer = this.nextElementSibling;
+                    // Se a pergunta está ativa, define a altura da resposta, senão, fecha.
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
